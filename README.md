@@ -7,7 +7,7 @@ What is SID? A music file format (of sorts) commonly known to house Commodore 64
 
 ## Overview
 
-SIDStreamer lets you load and play SID music files. It provides a simple UI for playback control.
+SIDStreamer lets you load and play SID music files! It doesn't get more retro than that. 
 
 ## Features
 
@@ -21,6 +21,11 @@ SIDStreamer lets you load and play SID music files. It provides a simple UI for 
 - Visual Studio 2026 (recommended) or compatible IDE
 - MonoGame Framework
 
+## Upcoming Features
+- Theme support, and a default theme instead of the christmas vibes the current one have?
+- Select track inside sid file (for multi-track sids)
+- Playlist support?
+- Possible integration with High Voltage SID Collection (HVSC)?
 
 
 ##
