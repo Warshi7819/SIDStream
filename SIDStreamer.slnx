@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="MonoSidPlayer/MonoSidPlayer.csproj" />
+  <Project Path="SIDStreamer/SIDStreamer.csproj" />
+</Solution>
