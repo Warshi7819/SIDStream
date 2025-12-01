@@ -1,7 +1,9 @@
-![SIDStreamer Logo](https://github.com/Warshi7819/SIDStreamer/blob/master/SIDStreamer/logo/logo.png)
+![SIDStreamer Logo](https://github.com/Warshi7819/SIDStreamer/blob/master/SIDStreamer/logo/logo-wiki.png)
 
 Remember the 90's? Finally a real shaped Windows application is Back! This beauty will let you stream 
-those retro SID music files! SID? Music file format commanly known to house Commodore 64 music!
+those retro SID music files! 
+
+What is SID? A music file format (of sorts) commonly known to house Commodore 64 music!
 
 ## Overview
 
