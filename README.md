@@ -18,3 +18,9 @@ SIDStreamer lets you load and play SID music files. It provides a simple UI for 
 - Windows 10 or later
 - Visual Studio 2026 (recommended) or compatible IDE
 - MonoGame Framework
+
+
+[!CAUTION]
+Code may unexpectedly explode at any time, possibly unscrewing your hard drive and throwing it out the window. 
+Use at your own risk!
+[/!CAUTION]	
