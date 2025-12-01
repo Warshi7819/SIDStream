@@ -1,6 +1,6 @@
 # SIDStreamer
 
-![SIDStreamer Logo](Sidstreamer/logo/logo.png)
+![SIDStreamer Logo](https://github.com/Warshi7819/SIDStreamer/blob/master/SIDStreamer/logo/logo.png)
 
 Remember the 90's? Finally a real shaped Windows application is Back! This beauty will let you stream 
 those retro SID music files! SID? Music file format commanly known to house Commodore 64 music!
