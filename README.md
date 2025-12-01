@@ -20,7 +20,6 @@ SIDStreamer lets you load and play SID music files. It provides a simple UI for 
 - MonoGame Framework
 
 
-[!CAUTION]
-Code may unexpectedly explode at any time, possibly unscrewing your hard drive and throwing it out the window. 
-Use at your own risk!
-[/!CAUTION]	
+> [!CAUTION]
+> Code may unexpectedly explode at any time, possibly unscrewing your hard drive and throwing it out the window. 
+> Use at your own risk!	
