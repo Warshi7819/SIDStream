@@ -51,6 +51,7 @@
             label2 = new Label();
             labelInfo = new Label();
             noFocusTrackBar1 = new SIDStreamer.Controls.NoFocusTrackBar();
+            label3 = new Label();
             ((System.ComponentModel.ISupportInitialize)noFocusTrackBar1).BeginInit();
             SuspendLayout();
             // 
@@ -65,9 +66,9 @@
             label1.ForeColor = Color.DarkGray;
             label1.Location = new Point(327, 855);
             label1.Name = "label1";
-            label1.Size = new Size(495, 32);
+            label1.Size = new Size(454, 32);
             label1.TabIndex = 2;
-            label1.Text = "Merry Christmas 2025 - Retro And Gaming ©";
+            label1.Text = "Merry Christmas 2025 - PatchWork Inc. ©";
             // 
             // label2
             // 
@@ -101,11 +102,23 @@
             noFocusTrackBar1.TabStop = false;
             noFocusTrackBar1.Value = 5;
             // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.BackColor = Color.Black;
+            label3.ForeColor = Color.White;
+            label3.Location = new Point(271, 450);
+            label3.Name = "label3";
+            label3.Size = new Size(89, 32);
+            label3.TabIndex = 7;
+            label3.Text = "00 / 00";
+            // 
             // SIDstreamer
             // 
             AutoScaleDimensions = new SizeF(13F, 32F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1057, 937);
+            Controls.Add(label3);
             Controls.Add(noFocusTrackBar1);
             Controls.Add(labelInfo);
             Controls.Add(label2);
@@ -123,5 +136,6 @@
         private Label label2;
         private Label labelInfo;
         private Controls.NoFocusTrackBar noFocusTrackBar1;
+        private Label label3;
     }
 }

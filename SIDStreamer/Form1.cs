@@ -9,6 +9,7 @@ namespace SIDStreamer
     {
         private MonoSidPlayer player;
         private SidTune? tune;
+        private string? pathToTune;
 
         // Logo fields
         private Bitmap? logoOriginal;
@@ -329,7 +330,23 @@ namespace SIDStreamer
                 btn.Click += closeButton_Click;
                 Controls.Add(btn);
 
+                btn = new SIDStreamer.Controls.ImageButton();
+                btn.Location = new Point(230, 450);
+                btn.Size = new Size(32, 32);
+                btn.NormalImage = Image.FromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "icons", "prev.png"));
+                btn.HoverImage = Image.FromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "icons", "prev.png"));
+                btn.PressedImage = Image.FromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "icons", "prev.png"));
+                btn.Click += prevButton_Click;
+                Controls.Add(btn);
 
+                btn = new SIDStreamer.Controls.ImageButton();
+                btn.Location = new Point(365, 450);
+                btn.Size = new Size(32, 32);
+                btn.NormalImage = Image.FromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "icons", "next.png"));
+                btn.HoverImage = Image.FromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "icons", "next.png"));
+                btn.PressedImage = Image.FromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "icons", "next.png"));
+                btn.Click += nextButton_Click;
+                Controls.Add(btn);
                 this.noFocusTrackBar1.ValueChanged += TrackBar1_ValueChanged;
             }
             catch
@@ -342,7 +359,7 @@ namespace SIDStreamer
 
         private void loadTune()
         {
-            if (!string.IsNullOrEmpty(this.label2.Text))
+            if (!string.IsNullOrEmpty(this.pathToTune))
             {
                 if (this.tune != null)
                 {
@@ -351,13 +368,15 @@ namespace SIDStreamer
                 }
 
 
-                using (FileStream file = new FileStream(this.label2.Text, FileMode.Open, FileAccess.Read))
+                using (FileStream file = new FileStream(this.pathToTune, FileMode.Open, FileAccess.Read))
                 {
                     this.tune = new SidTune(file);
                     this.labelInfo.Text = "Author: " + this.tune.Info.InfoString2;
                     this.labelInfo.Text += Environment.NewLine + "Title: " + this.tune.Info.InfoString1;
                     this.labelInfo.Text += Environment.NewLine + "Released: " + this.tune.Info.InfoString3;
                 }
+
+                this.updateCurrentSong();
             }
         }
 
@@ -393,6 +412,87 @@ namespace SIDStreamer
             this.Close();
         }
 
+        private void prevButton_Click(object? sender, EventArgs e)
+        {
+            if (this.tune != null)
+            {
+                if (tune.Info.currentSong > 1)
+                {
+
+                    switch (player.State)
+                    {
+                        case SID2Types.sid2_player_t.sid2_playing:
+                        case SID2Types.sid2_player_t.sid2_paused:
+                            player.stop();
+                            break;
+                    }
+
+                    tune.Info.currentSong--;
+
+                    player.Start(tune, tune.Info.currentSong);
+
+                    this.updateCurrentSong();
+
+
+                }
+            }
+        }
+
+        private void nextButton_Click(object? sender, EventArgs e)
+        {
+            if (this.tune != null)
+            {
+                if (this.tune.Info.currentSong < this.tune.Info.songs)
+                {
+
+                    switch (this.player.State)
+                    {
+                        case SID2Types.sid2_player_t.sid2_playing:
+                        case SID2Types.sid2_player_t.sid2_paused:
+                            player.stop();
+                            break;
+                    }
+
+                    tune.Info.currentSong++;
+
+
+                    player.Start(tune, tune.Info.currentSong);
+                    this.updateCurrentSong();
+                }
+            }
+        }
+
+        private void updateCurrentSong()
+        {
+
+            if (this.tune != null)
+            {
+                int tmp = this.tune.Info.currentSong;
+                if (tmp == 0) { tmp = 1; }
+
+                if (tmp < 10)
+                {
+                    this.label3.Text = "0" + tmp + " / ";
+                }
+                else
+                {
+                    this.label3.Text = tmp + " / ";
+                }
+
+                if (this.tune.Info.songs < 10)
+                {
+                    this.label3.Text += "0" + this.tune.Info.songs;
+                }
+                else
+                {
+                    this.label3.Text += this.tune.Info.songs;
+                }
+            }
+            else
+            {
+                this.label3.Text = "00 / 00";
+            }
+        }
         private void openFileButton_Click(object? sender, EventArgs e)
         {
             openFileDialog1.Title = "Select a File";
@@ -404,11 +504,13 @@ namespace SIDStreamer
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 string filePath = openFileDialog1.FileName;
-                this.label2.Text = filePath;
+                this.pathToTune = filePath;
+                this.label2.Text = Path.GetFileName(filePath);
                 this.loadTune();
             }
             else
             {
+                this.pathToTune = null;
                 this.label2.Text = "No media selected ...";
                 this.labelInfo.Text = "SIDstreamer v.1.0";
             }
