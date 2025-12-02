@@ -66,9 +66,9 @@
             label1.ForeColor = Color.DarkGray;
             label1.Location = new Point(327, 855);
             label1.Name = "label1";
-            label1.Size = new Size(454, 32);
+            label1.Size = new Size(495, 32);
             label1.TabIndex = 2;
-            label1.Text = "Merry Christmas 2025 - PatchWork Inc. ©";
+            label1.Text = "Merry Christmas 2025 - Retro And Gaming ©";
             // 
             // label2
             // 
