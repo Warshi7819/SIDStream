@@ -1,6 +1,6 @@
 ![SIDStreamer Logo](https://github.com/Warshi7819/SIDStreamer/blob/master/SIDStreamer/logo/logo-wiki.png)
 
-Remember the 90's? Finally a new shaped Windows Forms application is here! This beauty will let you play 
+Remember the late 90's? Finally a new shaped Windows Forms application is here! This beauty will let you play 
 those retro SID music files! 
 
 What is SID? You unthought man of little skill! SID is a music file format (of sorts) commonly known to house Commodore 64 music!
@@ -30,9 +30,8 @@ SIDStreamer lets you load and play SID music files! It doesn't get more retro th
 
 ## Upcoming Features
 - Theme support, and a default theme instead of the christmas vibes the current one have?
-- Select track inside sid file (for multi-track sids)
-- Playlist support?
-- Possible integration with High Voltage SID Collection (HVSC)?
+- Playlist support. Probably a long shot because.. when does a SID file really end?
+- Possible integration with High Voltage SID Collection (HVSC) and do some real SIDstreaming?
 
 
 ##
