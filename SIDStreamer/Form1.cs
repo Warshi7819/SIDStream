@@ -511,12 +511,11 @@ namespace SIDStreamer
                 this.pathToTune = filePath;
                 this.label2.Text = Path.GetFileName(filePath);
                 this.loadTune();
+                player.Start(tune);
             }
             else
             {
-                this.pathToTune = null;
-                this.label2.Text = "No media selected ...";
-                this.labelInfo.Text = "SIDstreamer v.1.0";
+                ;
             }
         }
 
