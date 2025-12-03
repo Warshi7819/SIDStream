@@ -105,7 +105,7 @@ namespace sidplay
         ///  Start playing the tune with the default song
         /// </summary>
         /// <param name="tune">SidTune</param>
-        public void Start(SidTune tune)
+        public void Start(SidTune? tune)
         {
             Start(tune, 0);
         }
