@@ -38,6 +38,10 @@ namespace SIDStreamer
         {
             InitializeComponent();
 
+            // Load icon
+            string iconPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logo", "simple.ico");
+            this.Icon = new Icon(iconPath);
+
             // Reduce flicker by enabling double buffering and controlling painting.
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.OptimizedDoubleBuffer, true);
             DoubleBuffered = true;
