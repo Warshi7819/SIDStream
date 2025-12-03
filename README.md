@@ -14,7 +14,7 @@ SIDStreamer lets you load and play SID music files! It doesn't get more retro th
  - Once the MonoGame framework came along I did some super tiny modifications to the original code so that it now works again! And if my memory serves me correct I may have renamed it from SidPlayer to MonoSidPlayer.
 
 > [!IMPORTANT]
-> Anybody know who the real author is please let me know and I'll be sure to update this Readme.
+> Anybody who knows the original author of the SidPlay XNA library please let me know and I'll be sure to give the proper credits.
 
 ## Features
 
