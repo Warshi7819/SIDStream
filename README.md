@@ -34,6 +34,17 @@ SIDStreamer lets you load and play SID music files! It doesn't get more retro th
 - Possible integration with High Voltage SID Collection (HVSC) and do some real SIDstreaming?
 - Installer
 
+## SIDstream Privacy Policy
+SIDstream respects your privacy.
+
+**No Tracking:** The application does not collect, store, or track any usage data.
+
+**No Registration:** You are not required to create an account, register, or log in to use SIDstream.
+
+**No Personal Data:** The application does not request or process any personal information.
+
+SIDstream is designed to be simple, safe, and private. Your experience is entirely local to your device.
+
 ##
 
 > [!CAUTION]
