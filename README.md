@@ -18,8 +18,8 @@ SIDStreamer lets you load and play SID music files! It doesn't get more retro th
 
 ## Features
 
-- Load and play SID files (.sid)
-- Playback controls: Play, Stop
+- Load and play a given SID file (.sid)
+- Playback controls: Play, Stop, Next, Previous
 
 ## Requirements
 
