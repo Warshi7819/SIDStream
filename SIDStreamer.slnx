@@ -1,7 +1,16 @@
 <Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+  </Configurations>
   <Folder Name="/Solution Items/">
+    <File Path="InnoSetupScript.iss" />
     <File Path="README.md" />
   </Folder>
-  <Project Path="MonoSidPlayer/MonoSidPlayer.csproj" />
-  <Project Path="SIDStreamer/SIDStreamer.csproj" />
+  <Project Path="MonoSidPlayer/MonoSidPlayer.csproj">
+    <Platform Solution="*|x64" Project="x64" />
+  </Project>
+  <Project Path="SIDStreamer/SIDStreamer.csproj">
+    <Platform Solution="*|x64" Project="x64" />
+  </Project>
 </Solution>
