@@ -10,7 +10,7 @@
   <Project Path="MonoSidPlayer/MonoSidPlayer.csproj">
     <Platform Solution="*|x64" Project="x64" />
   </Project>
-  <Project Path="SIDStreamer/SIDStreamer.csproj">
+  <Project Path="SIDStreamer/SIDStream.csproj">
     <Platform Solution="*|x64" Project="x64" />
   </Project>
 </Solution>
