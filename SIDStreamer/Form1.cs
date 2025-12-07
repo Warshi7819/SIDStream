@@ -1,4 +1,4 @@
-using sidplay;
+﻿using sidplay;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
@@ -168,6 +168,59 @@ namespace SIDStreamer
             logoSize = new Size(targetW, targetH);
             Invalidate();
         }
+
+        // Auto scale fonts/labels based on the resolution and DPI setting my dev machine
+        // had at the time of development. (2560x1600 at 200% scaling → 192 DPI)
+        public void scaleLabelForResolution(Label lbl)
+        {
+            // Baseline resolution (your design reference)
+            const float refW = 2560f;
+            const float refH = 1600f;
+
+            // Baseline DPI (your dev machine at 200% scaling → 192)
+            const float refDpi = 192f;
+
+            // Current resolution
+            float curW = Screen.PrimaryScreen.Bounds.Width;
+            float curH = Screen.PrimaryScreen.Bounds.Height;
+
+            // Axis scale factors relative to the reference
+            float scaleX = curW / refW;
+            float scaleY = curH / refH;
+
+            // Current DPI
+            float dpi;
+            using (Graphics g = this.CreateGraphics())
+                dpi = g.DpiY;
+
+            // Inverse DPI factor: lower DPI → larger fonts
+            float dpiFactor = refDpi / dpi;
+
+            // Final font scale = resolution scaling * inverse DPI scaling
+            float fontScale = ((scaleX + scaleY) / 2f) * dpiFactor;
+
+            // Clamp near baseline
+            if (Math.Abs(fontScale - 1.0f) < 0.05f)
+                fontScale = 1.0f;
+
+            // Apply scaled font
+            lbl.Font = new Font(lbl.Font.FontFamily, lbl.Font.Size * fontScale, lbl.Font.Style);
+
+            // Scale position
+            lbl.Location = new Point(
+                (int)Math.Round(lbl.Location.X * scaleX),
+                (int)Math.Round(lbl.Location.Y * scaleY)
+            );
+
+            // Optionally scale bounding box
+            lbl.Size = new Size(
+                (int)Math.Round(lbl.Size.Width * scaleX),
+                (int)Math.Round(lbl.Size.Height * scaleY)
+            );
+        }
+
+
+
 
         /// <summary>
         /// Load the background from a relative path (e.g. "skins/christmas.png").
@@ -354,15 +407,20 @@ namespace SIDStreamer
                 this.noFocusTrackBar1.ValueChanged += TrackBar1_ValueChanged;
 
                 // Set some absolute positions for labels
+                scaleLabelForResolution(this.label1);
                 this.label1.Location = new Point(310, 840);
+                scaleLabelForResolution(this.label2);
                 this.label2.Location = new Point(203, 700);
+                scaleLabelForResolution(this.label3);
                 this.label3.Location = new Point(270, 450);
+                scaleLabelForResolution(this.labelInfo);
                 this.labelInfo.Location = new Point(220, 300);
+                    
                 this.noFocusTrackBar1.Location = new Point(600, 760);
             }
             catch
             {
-                // swallow � don't block startup if shaping fails
+                // swallow — don't block startup if shaping fails
                 Opacity = 1;
             }
         }
