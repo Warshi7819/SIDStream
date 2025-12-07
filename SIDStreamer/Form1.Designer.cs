@@ -64,7 +64,7 @@
             label1.AutoSize = true;
             label1.BackColor = Color.Black;
             label1.ForeColor = Color.DarkGray;
-            label1.Location = new Point(327, 855);
+            label1.Location = new Point(12, 268);
             label1.Name = "label1";
             label1.Size = new Size(495, 32);
             label1.TabIndex = 2;
@@ -75,7 +75,7 @@
             label2.AutoSize = true;
             label2.BackColor = Color.Black;
             label2.ForeColor = Color.White;
-            label2.Location = new Point(203, 707);
+            label2.Location = new Point(222, 213);
             label2.Name = "label2";
             label2.Size = new Size(78, 32);
             label2.TabIndex = 3;
@@ -86,7 +86,7 @@
             labelInfo.AutoSize = true;
             labelInfo.BackColor = Color.Black;
             labelInfo.ForeColor = Color.Lime;
-            labelInfo.Location = new Point(222, 318);
+            labelInfo.Location = new Point(95, 213);
             labelInfo.Name = "labelInfo";
             labelInfo.Size = new Size(78, 32);
             labelInfo.TabIndex = 4;
@@ -95,7 +95,7 @@
             // noFocusTrackBar1
             // 
             noFocusTrackBar1.BackColor = Color.Black;
-            noFocusTrackBar1.Location = new Point(540, 752);
+            noFocusTrackBar1.Location = new Point(148, 321);
             noFocusTrackBar1.Name = "noFocusTrackBar1";
             noFocusTrackBar1.Size = new Size(208, 90);
             noFocusTrackBar1.TabIndex = 6;
@@ -107,7 +107,7 @@
             label3.AutoSize = true;
             label3.BackColor = Color.Black;
             label3.ForeColor = Color.White;
-            label3.Location = new Point(271, 450);
+            label3.Location = new Point(331, 213);
             label3.Name = "label3";
             label3.Size = new Size(89, 32);
             label3.TabIndex = 7;
@@ -117,7 +117,7 @@
             // 
             AutoScaleDimensions = new SizeF(13F, 32F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1057, 937);
+            ClientSize = new Size(589, 517);
             Controls.Add(label3);
             Controls.Add(noFocusTrackBar1);
             Controls.Add(labelInfo);

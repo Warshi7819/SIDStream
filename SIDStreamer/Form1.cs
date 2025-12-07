@@ -352,6 +352,13 @@ namespace SIDStreamer
                 btn.Click += nextButton_Click;
                 Controls.Add(btn);
                 this.noFocusTrackBar1.ValueChanged += TrackBar1_ValueChanged;
+
+                // Set some absolute positions for labels
+                this.label1.Location = new Point(310, 840);
+                this.label2.Location = new Point(203, 700);
+                this.label3.Location = new Point(270, 450);
+                this.labelInfo.Location = new Point(220, 300);
+                this.noFocusTrackBar1.Location = new Point(600, 760);
             }
             catch
             {
