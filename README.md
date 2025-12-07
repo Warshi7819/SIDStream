@@ -29,7 +29,6 @@ SIDStreamer lets you load and play SID music files! It doesn't get more retro th
 - Theme support, and a default theme instead of the christmas vibes the current one have?
 - Playlist support. Probably a long shot because.. when does a SID file really end?
 - Possible integration with High Voltage SID Collection (HVSC) and do some real SIDstreaming?
-- Installer
 
 ## Privacy Policy
 SIDstream respects your privacy.
