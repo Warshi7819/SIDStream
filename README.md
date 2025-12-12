@@ -11,6 +11,7 @@ SIDStreamer lets you load and play SID music files! It doesn't get more retro th
 
 > [!NOTE]
 > Not sure what to play? Check out the High Voltage SID Collection (HVSC) - your provider of almost 60 000 SID files!
+> https://www.hvsc.c64.org/
 
 ## Credits
  - Turns out that I did not write the sid player part of this project! This was written ages ago for the Microsof.XNA library and made open source by what I believe was Ken Händel. But it has later been taken down probably because the Microsoft.XNA library is deprecated long ago. Anyways, credit to Mr. Ken Händel for writing the original SidPlayer code! 
