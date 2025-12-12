@@ -473,6 +473,11 @@ namespace SIDStreamer
         private void stopButton_Click(object? sender, EventArgs e)
         {
             player.stop();
+            if (tune != null)
+            {
+                tune.Info.currentSong = 1;
+            }
+            this.updateCurrentSong();
         }
 
         private void closeButton_Click(object? sender, EventArgs e)
