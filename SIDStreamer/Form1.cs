@@ -317,7 +317,7 @@ namespace SIDStreamer
         }
 
 
-        private Skin loadSkinData()
+        private Skin loadSkinData(string skinPath = "")
         { 
             Skin skin = new Skin
             {
@@ -336,8 +336,6 @@ namespace SIDStreamer
                 copyrightLabel = "Merry Christmas 2025 - Retro And Gaming ©",
                 copyrightLabelX = 310,
                 copyrightLabelY = 840,
-
-
 
                 // Play Button
                 playButtonImage = "play.png",
