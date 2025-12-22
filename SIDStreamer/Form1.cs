@@ -415,6 +415,12 @@ namespace SIDStreamer
 
     internal Color hexToColor(string hex)
     {
+
+        if (hex.Equals("transparent", StringComparison.OrdinalIgnoreCase))
+        {
+            return Color.Transparent;
+        }
+
         // Fjerner eventuell leading '#'
         hex = hex.Replace("#", "");
 
@@ -528,7 +534,7 @@ namespace SIDStreamer
 
 
                 this.label1.Text = skin.copyrightLabel;
-                this.label1.BackColor = this.hexToColor(skin.copyrightLabelBGColor);
+                this.label1.BackColor = this.hexToColor(skin.copyrightLabelBGColor); 
                 this.label1.ForeColor = this.hexToColor(skin.copyrightLabelFGColor);
                 
                 this.label2.Text = skin.mediaLabel;

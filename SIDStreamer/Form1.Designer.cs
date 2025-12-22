@@ -95,6 +95,7 @@
             // noFocusTrackBar1
             // 
             noFocusTrackBar1.BackColor = Color.Black;
+            noFocusTrackBar1.LargeChange = 1;
             noFocusTrackBar1.Location = new Point(148, 321);
             noFocusTrackBar1.Name = "noFocusTrackBar1";
             noFocusTrackBar1.Size = new Size(208, 90);
