@@ -12,25 +12,37 @@ namespace SIDStream
 
         // Default value of media label on startup
         public string mediaLabel { get; set; }
+        public string mediaLabelBGColor { get; set; }
+        public string mediaLabelFGColor { get; set; }
         public int mediaLabelX { get; set; }
         public int mediaLabelY { get; set; }
 
 
         // Value of info label e.g. SIDstreamer v.1.0.
         public string infoLabel { get; set; }
+        public string infoLabelBGColor { get; set; }
+        public string infoLabelFGColor { get; set; }
         public int infoLabelX { get; set; }
         public int infoLabelY { get; set; }
         public string copyrightLabel { get; set; }
+        public string copyrightLabelBGColor { get; set; }
+        public string copyrightLabelFGColor { get; set; }
+
         public int copyrightLabelX { get; set; }
         public int copyrightLabelY { get; set; }
+
 
         // Set position of volume slider
         public int volumeSliderX { get; set; }
         public int volumeSliderY { get; set; }
+        public string volumeSliderBGColor { get; set; }
+        public string volumeSliderFGColor { get; set; }
 
         // Set position of Current track label
         public int currentTrackLabelX { get; set; }
         public int currentTrackLabelY { get; set; }
+        public string currentTrackLabelBGColor { get; set; }
+        public string currentTrackLabelFGColor { get; set; }
 
         // Logo settings
         public string logoImage { get; set; }

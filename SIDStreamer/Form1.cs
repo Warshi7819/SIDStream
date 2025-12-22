@@ -3,7 +3,8 @@ using SIDStream;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
-
+using System.Text.Json;
+using System.Drawing;
 namespace SIDStreamer
 {
     public partial class SIDstreamer : Form
@@ -317,7 +318,7 @@ namespace SIDStreamer
         }
 
 
-        private Skin loadSkinData(string skinPath = "")
+        private Skin loadSkinDataHardcodedChristmas(string skinPath = "")
         { 
             Skin skin = new Skin
             {
@@ -404,24 +405,55 @@ namespace SIDStreamer
             return skin;
         }
 
-        private void SIDstreamer_Load(object? sender, EventArgs e)
+        private Skin? loadSkinData(string skinPath)
+        {
+
+            Skin? deserializedSkin = JsonSerializer.Deserialize<Skin>(File.ReadAllText(skinPath));
+            return deserializedSkin;
+        }
+
+
+    internal Color hexToColor(string hex)
+    {
+        // Fjerner eventuell leading '#'
+        hex = hex.Replace("#", "");
+
+        if (hex.Length == 3)
+        {
+            // Kortform (#RGB → #RRGGBB)
+            hex = string.Concat(
+                hex[0], hex[0],
+                hex[1], hex[1],
+                hex[2], hex[2]
+            );
+        }
+
+        if (hex.Length != 6)
+            throw new ArgumentException("Hex Color code must be 3 or 6 chars long.");
+
+        int r = Convert.ToInt32(hex.Substring(0, 2), 16);
+        int g = Convert.ToInt32(hex.Substring(2, 2), 16);
+        int b = Convert.ToInt32(hex.Substring(4, 2), 16);
+
+        return Color.FromArgb(r, g, b);
+    }
+
+    private void SIDstreamer_Load(object? sender, EventArgs e)
         {
             try
             {
-                var skin = this.loadSkinData();
+                string currentSkin = "SteamPunk"; 
 
                 string baseDir = AppDomain.CurrentDomain.BaseDirectory;
-                string imagePath = Path.Combine(baseDir, "skins", skin.bgImage);
-
-                // fallback when running from IDE
-                if (!File.Exists(imagePath))
-                    imagePath = Path.Combine(Directory.GetCurrentDirectory(), "skins", skin.bgImage);
-
+                string skinDir = Path.Combine(baseDir, "skins", currentSkin);
+                var skin = this.loadSkinData(Path.Combine(skinDir, "skin.json"));
+                string imagePath = Path.Combine(skinDir, skin.bgImage);
+                
                 // Suspend layout and apply shape before first paint
                 SuspendLayout();
 
                 // Load background into managed fields so we can scale before draw/region creation
-                LoadBackground(Path.Combine("skins", skin.bgImage));
+                LoadBackground(Path.Combine(skinDir, skin.bgImage));
 
                 // you can call SetBackgroundSize(...) here before ApplyImageShape if you want to pre-scale:
                 // e.g. SetBackgroundSize(800, 0); // preserve aspect by width
@@ -429,7 +461,7 @@ namespace SIDStreamer
                 ApplyImageShapeFromLoadedBackground();
 
                 // Load default logo if present
-                LoadLogo(Path.Combine("skins", skin.logoImage));
+                LoadLogo(Path.Combine(skinDir, skin.logoImage));
                 SetLogoPosition(skin.logoX, skin.logoY);
                 SetLogoSize(skin.logoWidth, skin.logoHeight); // preserve aspect by width
 
@@ -442,63 +474,76 @@ namespace SIDStreamer
                 var btn = new SIDStreamer.Controls.ImageButton();
                 btn.Location = new Point(skin.playButtonX, skin.playButtonY);
                 btn.Size = new Size(skin.playButtonWidth, skin.playButtonHeight);
-                btn.NormalImage = Image.FromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "skins", skin.playButtonImage));
-                btn.HoverImage = Image.FromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "skins", skin.playButtonHoverImage));
-                btn.PressedImage = Image.FromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "skins", skin.playButtonPressedImage));
+                btn.NormalImage = Image.FromFile(Path.Combine(skinDir, skin.playButtonImage));
+                btn.HoverImage = Image.FromFile(Path.Combine(skinDir, skin.playButtonHoverImage));
+                btn.PressedImage = Image.FromFile(Path.Combine(skinDir, skin.playButtonPressedImage));
                 btn.Click += playButton_Click;
                 Controls.Add(btn);
 
                 btn = new SIDStreamer.Controls.ImageButton();
                 btn.Location = new Point(skin.stopButtonX, skin.stopButtonY);
                 btn.Size = new Size(skin.stopButtonWidth, skin.stopButtonHeight);
-                btn.NormalImage = Image.FromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "skins", skin.stopButtonImage));
-                btn.HoverImage = Image.FromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "skins", skin.stopButtonHoverImage));
-                btn.PressedImage = Image.FromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "skins", skin.stopButtonPressedImage));
+                btn.NormalImage = Image.FromFile(Path.Combine(skinDir, skin.stopButtonImage));
+                btn.HoverImage = Image.FromFile(Path.Combine(skinDir, skin.stopButtonHoverImage));
+                btn.PressedImage = Image.FromFile(Path.Combine(skinDir, skin.stopButtonPressedImage));
                 btn.Click += stopButton_Click;
                 Controls.Add(btn);
 
                 btn = new SIDStreamer.Controls.ImageButton();
                 btn.Location = new Point(skin.openButtonX, skin.openButtonY);
                 btn.Size = new Size(skin.openButtonWidth, skin.openButtonHeight);
-                btn.NormalImage = Image.FromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "skins", skin.openButtonImage));
-                btn.HoverImage = Image.FromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "skins", skin.openButtonHoverImage));
-                btn.PressedImage = Image.FromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "skins", skin.openButtonPressedImage));
+                btn.NormalImage = Image.FromFile(Path.Combine(skinDir, skin.openButtonImage));
+                btn.HoverImage = Image.FromFile(Path.Combine(skinDir, skin.openButtonHoverImage));
+                btn.PressedImage = Image.FromFile(Path.Combine(skinDir, skin.openButtonPressedImage));
                 btn.Click += openFileButton_Click;
                 Controls.Add(btn);
 
                 btn = new SIDStreamer.Controls.ImageButton();
                 btn.Location = new Point(skin.closeButtonX, skin.closeButtonY);
                 btn.Size = new Size(skin.closeButtonWidth, skin.closeButtonHeight);
-                btn.NormalImage = Image.FromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "skins", skin.closeButtonImage));
-                btn.HoverImage = Image.FromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "skins", skin.closeButtonHoverImage));
-                btn.PressedImage = Image.FromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "skins", skin.closeButtonPressedImage));
+                btn.NormalImage = Image.FromFile(Path.Combine(skinDir, skin.closeButtonImage));
+                btn.HoverImage = Image.FromFile(Path.Combine(skinDir, skin.closeButtonHoverImage));
+                btn.PressedImage = Image.FromFile(Path.Combine(skinDir, skin.closeButtonPressedImage));
                 btn.Click += closeButton_Click;
                 Controls.Add(btn);
 
                 btn = new SIDStreamer.Controls.ImageButton();
                 btn.Location = new Point(skin.previousButtonX, skin.previousButtonY);
                 btn.Size = new Size(skin.previousButtonWidth, skin.previousButtonHeight);
-                btn.NormalImage = Image.FromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "skins", skin.previousButtonImage));
-                btn.HoverImage = Image.FromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "skins", skin.previousButtonHoverImage));
-                btn.PressedImage = Image.FromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "skins", skin.previousButtonPressedImage));
+                btn.NormalImage = Image.FromFile(Path.Combine(skinDir, skin.previousButtonImage));
+                btn.HoverImage = Image.FromFile(Path.Combine(skinDir, skin.previousButtonHoverImage));
+                btn.PressedImage = Image.FromFile(Path.Combine(skinDir, skin.previousButtonPressedImage));
                 btn.Click += prevButton_Click;
                 Controls.Add(btn);
 
                 btn = new SIDStreamer.Controls.ImageButton();
                 btn.Location = new Point(skin.nextButtonX, skin.nextButtonY);
                 btn.Size = new Size(skin.nextButtonWidth, skin.nextButtonHeight);
-                btn.NormalImage = Image.FromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "skins", skin.nextButtonImage));
-                btn.HoverImage = Image.FromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "skins", skin.nextButtonHoverImage));
-                btn.PressedImage = Image.FromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "skins", skin.nextButtonPressedImage));
+                btn.NormalImage = Image.FromFile(Path.Combine(skinDir, skin.nextButtonImage));
+                btn.HoverImage = Image.FromFile(Path.Combine(skinDir, skin.nextButtonHoverImage));
+                btn.PressedImage = Image.FromFile(Path.Combine(skinDir, skin.nextButtonPressedImage));
                 btn.Click += nextButton_Click;
                 Controls.Add(btn);
                 this.noFocusTrackBar1.ValueChanged += TrackBar1_ValueChanged;
 
 
                 this.label1.Text = skin.copyrightLabel;
-                this.label2.Text = skin.mediaLabel;
-                this.labelInfo.Text = skin.infoLabel;
+                this.label1.BackColor = this.hexToColor(skin.copyrightLabelBGColor);
+                this.label1.ForeColor = this.hexToColor(skin.copyrightLabelFGColor);
                 
+                this.label2.Text = skin.mediaLabel;
+                this.label2.BackColor = this.hexToColor(skin.mediaLabelBGColor);
+                this.label2.ForeColor = this.hexToColor(skin.mediaLabelFGColor);
+                this.labelInfo.Text = skin.infoLabel;
+                this.labelInfo.BackColor = this.hexToColor(skin.infoLabelBGColor);
+                this.labelInfo.ForeColor = this.hexToColor(skin.infoLabelFGColor);
+
+                this.label3.BackColor = this.hexToColor(skin.currentTrackLabelBGColor);
+                this.label3.ForeColor = this.hexToColor(skin.currentTrackLabelFGColor);
+
+                this.noFocusTrackBar1.BackColor = this.hexToColor(skin.volumeSliderBGColor);
+                this.noFocusTrackBar1.ForeColor = this.hexToColor(skin.volumeSliderFGColor);
+
                 // Set some absolute positions for labels
                 scaleLabelForResolution(this.label1);
                 this.label1.Location = new Point(skin.copyrightLabelX, skin.copyrightLabelY);
