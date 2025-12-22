@@ -1,4 +1,5 @@
 ﻿using sidplay;
+using SIDStream;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
@@ -315,25 +316,114 @@ namespace SIDStreamer
             }
         }
 
+
+        private Skin loadSkinData()
+        { 
+            Skin skin = new Skin
+            {
+                bgImage = "christmas.png",
+                logoImage = "logo.png",
+                logoX = 200,
+                logoY = 160,
+                logoWidth = 200,
+                logoHeight = 0,
+                infoLabel = "SIDstreamer v.1.0",
+                infoLabelX = 220,
+                infoLabelY = 300,   
+                mediaLabel = "No media selected ...",
+                mediaLabelX = 203,
+                mediaLabelY = 700,
+                copyrightLabel = "Merry Christmas 2025 - Retro And Gaming ©",
+                copyrightLabelX = 310,
+                copyrightLabelY = 840,
+
+
+
+                // Play Button
+                playButtonImage = "play.png",
+                playButtonHoverImage = "play.png",
+                playButtonPressedImage = "play.png",
+                playButtonX = 370,
+                playButtonY = 763,
+                playButtonWidth = 48,
+                playButtonHeight = 48,
+
+                // Stop Button
+                stopButtonImage = "stop.png",
+                stopButtonHoverImage = "stop.png",
+                stopButtonPressedImage = "stop.png",
+                stopButtonX = 310,
+                stopButtonY = 763,
+                stopButtonWidth = 48,
+                stopButtonHeight = 48,
+
+                // open button
+                openButtonImage = "openw.png",
+                openButtonHoverImage = "openw.png",
+                openButtonPressedImage = "openw.png",
+                openButtonX = 210,
+                openButtonY = 750,
+                openButtonWidth = 62,
+                openButtonHeight = 62,
+
+                // Close button
+                closeButtonImage = "close.png",
+                closeButtonHoverImage = "close.png",
+                closeButtonPressedImage = "close.png",
+                closeButtonX = 950,
+                closeButtonY = 165,
+                closeButtonWidth = 62,
+                closeButtonHeight = 62,
+
+                // Previous button
+                previousButtonImage = "prev.png",
+                previousButtonHoverImage = "prev.png",
+                previousButtonPressedImage = "prev.png",
+                previousButtonX = 230,
+                previousButtonY = 450,
+                previousButtonWidth = 32,
+                previousButtonHeight = 32,
+
+                // Next button
+                nextButtonImage = "next.png",
+                nextButtonHoverImage = "next.png",
+                nextButtonPressedImage = "next.png",
+                nextButtonX = 365,
+                nextButtonY = 450,
+                nextButtonWidth = 32,
+                nextButtonHeight = 32,
+
+                // volume slider position
+                volumeSliderX = 600,
+                volumeSliderY = 760,
+
+                // Current track label position
+                currentTrackLabelX = 270,
+                currentTrackLabelY = 450
+
+            };
+
+            return skin;
+        }
+
         private void SIDstreamer_Load(object? sender, EventArgs e)
         {
             try
             {
-                string baseDir = AppDomain.CurrentDomain.BaseDirectory;
-                string imagePath = Path.Combine(baseDir, "skins", "christmas2.png");
-                this.label2.Text = "No media selected ...";
+                var skin = this.loadSkinData();
 
-                this.labelInfo.Text = "SIDstreamer v.1.0";
+                string baseDir = AppDomain.CurrentDomain.BaseDirectory;
+                string imagePath = Path.Combine(baseDir, "skins", skin.bgImage);
 
                 // fallback when running from IDE
                 if (!File.Exists(imagePath))
-                    imagePath = Path.Combine(Directory.GetCurrentDirectory(), "skins", "christmas2.png");
+                    imagePath = Path.Combine(Directory.GetCurrentDirectory(), "skins", skin.bgImage);
 
                 // Suspend layout and apply shape before first paint
                 SuspendLayout();
 
                 // Load background into managed fields so we can scale before draw/region creation
-                LoadBackground(Path.Combine("skins", "christmas2.png"));
+                LoadBackground(Path.Combine("skins", skin.bgImage));
 
                 // you can call SetBackgroundSize(...) here before ApplyImageShape if you want to pre-scale:
                 // e.g. SetBackgroundSize(800, 0); // preserve aspect by width
@@ -341,9 +431,9 @@ namespace SIDStreamer
                 ApplyImageShapeFromLoadedBackground();
 
                 // Load default logo if present
-                LoadLogo(Path.Combine("logo", "logo.png"));
-                SetLogoPosition(200, 160);
-                SetLogoSize(200, 0); // preserve aspect by width
+                LoadLogo(Path.Combine("skins", skin.logoImage));
+                SetLogoPosition(skin.logoX, skin.logoY);
+                SetLogoSize(skin.logoWidth, skin.logoHeight); // preserve aspect by width
 
                 ResumeLayout();
 
@@ -352,71 +442,76 @@ namespace SIDStreamer
 
                 // after LoadBackground/ApplyImageShape and before showing form add the image buttons
                 var btn = new SIDStreamer.Controls.ImageButton();
-                btn.Location = new Point(370, 763);
-                btn.Size = new Size(48, 48);
-                btn.NormalImage = Image.FromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "icons", "play.png"));
-                btn.HoverImage = Image.FromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "icons", "play.png"));
-                btn.PressedImage = Image.FromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "icons", "play.png"));
+                btn.Location = new Point(skin.playButtonX, skin.playButtonY);
+                btn.Size = new Size(skin.playButtonWidth, skin.playButtonHeight);
+                btn.NormalImage = Image.FromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "skins", skin.playButtonImage));
+                btn.HoverImage = Image.FromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "skins", skin.playButtonHoverImage));
+                btn.PressedImage = Image.FromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "skins", skin.playButtonPressedImage));
                 btn.Click += playButton_Click;
                 Controls.Add(btn);
 
                 btn = new SIDStreamer.Controls.ImageButton();
-                btn.Location = new Point(310, 763);
-                btn.Size = new Size(48, 48);
-                btn.NormalImage = Image.FromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "icons", "stop.png"));
-                btn.HoverImage = Image.FromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "icons", "stop.png"));
-                btn.PressedImage = Image.FromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "icons", "stop.png"));
+                btn.Location = new Point(skin.stopButtonX, skin.stopButtonY);
+                btn.Size = new Size(skin.stopButtonWidth, skin.stopButtonHeight);
+                btn.NormalImage = Image.FromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "skins", skin.stopButtonImage));
+                btn.HoverImage = Image.FromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "skins", skin.stopButtonHoverImage));
+                btn.PressedImage = Image.FromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "skins", skin.stopButtonPressedImage));
                 btn.Click += stopButton_Click;
                 Controls.Add(btn);
 
                 btn = new SIDStreamer.Controls.ImageButton();
-                btn.Location = new Point(210, 750);
-                btn.Size = new Size(62, 62);
-                btn.NormalImage = Image.FromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "icons", "openw.png"));
-                btn.HoverImage = Image.FromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "icons", "openw.png"));
-                btn.PressedImage = Image.FromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "icons", "openw.png"));
+                btn.Location = new Point(skin.openButtonX, skin.openButtonY);
+                btn.Size = new Size(skin.openButtonWidth, skin.openButtonHeight);
+                btn.NormalImage = Image.FromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "skins", skin.openButtonImage));
+                btn.HoverImage = Image.FromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "skins", skin.openButtonHoverImage));
+                btn.PressedImage = Image.FromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "skins", skin.openButtonPressedImage));
                 btn.Click += openFileButton_Click;
                 Controls.Add(btn);
 
                 btn = new SIDStreamer.Controls.ImageButton();
-                btn.Location = new Point(950, 165);
-                btn.Size = new Size(62, 62);
-                btn.NormalImage = Image.FromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "icons", "close.png"));
-                btn.HoverImage = Image.FromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "icons", "close.png"));
-                btn.PressedImage = Image.FromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "icons", "close.png"));
+                btn.Location = new Point(skin.closeButtonX, skin.closeButtonY);
+                btn.Size = new Size(skin.closeButtonWidth, skin.closeButtonHeight);
+                btn.NormalImage = Image.FromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "skins", skin.closeButtonImage));
+                btn.HoverImage = Image.FromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "skins", skin.closeButtonHoverImage));
+                btn.PressedImage = Image.FromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "skins", skin.closeButtonPressedImage));
                 btn.Click += closeButton_Click;
                 Controls.Add(btn);
 
                 btn = new SIDStreamer.Controls.ImageButton();
-                btn.Location = new Point(230, 450);
-                btn.Size = new Size(32, 32);
-                btn.NormalImage = Image.FromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "icons", "prev.png"));
-                btn.HoverImage = Image.FromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "icons", "prev.png"));
-                btn.PressedImage = Image.FromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "icons", "prev.png"));
+                btn.Location = new Point(skin.previousButtonX, skin.previousButtonY);
+                btn.Size = new Size(skin.previousButtonWidth, skin.previousButtonHeight);
+                btn.NormalImage = Image.FromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "skins", skin.previousButtonImage));
+                btn.HoverImage = Image.FromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "skins", skin.previousButtonHoverImage));
+                btn.PressedImage = Image.FromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "skins", skin.previousButtonPressedImage));
                 btn.Click += prevButton_Click;
                 Controls.Add(btn);
 
                 btn = new SIDStreamer.Controls.ImageButton();
-                btn.Location = new Point(365, 450);
-                btn.Size = new Size(32, 32);
-                btn.NormalImage = Image.FromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "icons", "next.png"));
-                btn.HoverImage = Image.FromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "icons", "next.png"));
-                btn.PressedImage = Image.FromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "icons", "next.png"));
+                btn.Location = new Point(skin.nextButtonX, skin.nextButtonY);
+                btn.Size = new Size(skin.nextButtonWidth, skin.nextButtonHeight);
+                btn.NormalImage = Image.FromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "skins", skin.nextButtonImage));
+                btn.HoverImage = Image.FromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "skins", skin.nextButtonHoverImage));
+                btn.PressedImage = Image.FromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "skins", skin.nextButtonPressedImage));
                 btn.Click += nextButton_Click;
                 Controls.Add(btn);
                 this.noFocusTrackBar1.ValueChanged += TrackBar1_ValueChanged;
 
+
+                this.label1.Text = skin.copyrightLabel;
+                this.label2.Text = skin.mediaLabel;
+                this.labelInfo.Text = skin.infoLabel;
+                
                 // Set some absolute positions for labels
                 scaleLabelForResolution(this.label1);
-                this.label1.Location = new Point(310, 840);
+                this.label1.Location = new Point(skin.copyrightLabelX, skin.copyrightLabelY);
                 scaleLabelForResolution(this.label2);
-                this.label2.Location = new Point(203, 700);
+                this.label2.Location = new Point(skin.mediaLabelX, skin.mediaLabelY);
                 scaleLabelForResolution(this.label3);
-                this.label3.Location = new Point(270, 450);
+                this.label3.Location = new Point(skin.currentTrackLabelX, skin.currentTrackLabelY);
                 scaleLabelForResolution(this.labelInfo);
-                this.labelInfo.Location = new Point(220, 300);
+                this.labelInfo.Location = new Point(skin.infoLabelX, skin.infoLabelY);
                     
-                this.noFocusTrackBar1.Location = new Point(600, 760);
+                this.noFocusTrackBar1.Location = new Point(skin.volumeSliderX, skin.volumeSliderY);
             }
             catch
             {
