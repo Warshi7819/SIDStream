@@ -19,11 +19,11 @@ Well, turns out it gets even more retro :) Now with skin support! Create your ow
    </tr> 
    <tr>
       <td>SteamPunk</td>
-      <td>t4</td>
+      <td><img src="/SIDStreamer/Readme/SteamPunk.png"  alt="1" width = 360px height = 640px ></td>
    </tr>
    <tr>
       <td>Christmas</td>
-      <td>t5</td>
+      <td><img src="/SIDStreamer/Readme/Christmas.png"  alt="1" width = 360px height = 640px ></td>
   </tr>
 </table>
 
