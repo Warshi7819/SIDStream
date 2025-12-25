@@ -169,6 +169,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Readme\" />
     <Folder Include="skins\Christmas\" />
     <Folder Include="skins\SteamPunk\" />
   </ItemGroup>
