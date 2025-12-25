@@ -1,18 +1,17 @@
-﻿using sidplay;
-using SIDStream;
-using System.Drawing.Drawing2D;
+﻿using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Drawing;
-namespace SIDStreamer
-{
-    public partial class SIDstreamer : Form
-    {
-        private MonoSidPlayer player;
-        private SidTune? tune;
-        private string? pathToTune;
+using System;
+using System.IO;
+using System.Collections.Generic;
 
+
+namespace SIDStream
+{
+    public partial class SettingsForm : Form
+    {
         // Logo fields
         private Bitmap? logoOriginal;
         private Bitmap? logoScaled;
@@ -36,9 +35,9 @@ namespace SIDStreamer
         private const int WM_NCLBUTTONDOWN = 0x00A1;
         private const int HTCAPTION = 0x02;
 
-        private string currentSkin = "SteamPunk";
+        public string newlySelectedSkin = "";
 
-        public SIDstreamer()
+        public SettingsForm()
         {
             InitializeComponent();
 
@@ -60,8 +59,6 @@ namespace SIDStreamer
             // (controls will still receive their own mouse events and won't trigger this).
             this.MouseDown += SIDstreamer_MouseDown;
 
-            player = new MonoSidPlayer(true);
-            player.setVolume(0.5f);
         }
 
         /// <summary>
@@ -223,9 +220,6 @@ namespace SIDStreamer
             );
         }
 
-
-
-
         /// <summary>
         /// Load the background from a relative path (e.g. "skins/christmas.png").
         /// Default draws original size unless SetBackgroundSize is used before drawing.
@@ -319,94 +313,6 @@ namespace SIDStreamer
             }
         }
 
-
-        private Skin loadSkinDataHardcodedChristmas(string skinPath = "")
-        { 
-            Skin skin = new Skin
-            {
-                bgImage = "christmas.png",
-                logoImage = "logo.png",
-                logoX = 200,
-                logoY = 160,
-                logoWidth = 200,
-                logoHeight = 0,
-                infoLabel = "SIDstreamer v.1.0",
-                infoLabelX = 220,
-                infoLabelY = 300,   
-                mediaLabel = "No media selected ...",
-                mediaLabelX = 203,
-                mediaLabelY = 700,
-                copyrightLabel = "Merry Christmas 2025 - Retro And Gaming ©",
-                copyrightLabelX = 310,
-                copyrightLabelY = 840,
-
-                // Play Button
-                playButtonImage = "play.png",
-                playButtonHoverImage = "play.png",
-                playButtonPressedImage = "play.png",
-                playButtonX = 370,
-                playButtonY = 763,
-                playButtonWidth = 48,
-                playButtonHeight = 48,
-
-                // Stop Button
-                stopButtonImage = "stop.png",
-                stopButtonHoverImage = "stop.png",
-                stopButtonPressedImage = "stop.png",
-                stopButtonX = 310,
-                stopButtonY = 763,
-                stopButtonWidth = 48,
-                stopButtonHeight = 48,
-
-                // open button
-                openButtonImage = "openw.png",
-                openButtonHoverImage = "openw.png",
-                openButtonPressedImage = "openw.png",
-                openButtonX = 210,
-                openButtonY = 750,
-                openButtonWidth = 62,
-                openButtonHeight = 62,
-
-                // Close button
-                closeButtonImage = "close.png",
-                closeButtonHoverImage = "close.png",
-                closeButtonPressedImage = "close.png",
-                closeButtonX = 950,
-                closeButtonY = 165,
-                closeButtonWidth = 62,
-                closeButtonHeight = 62,
-
-                // Previous button
-                previousButtonImage = "prev.png",
-                previousButtonHoverImage = "prev.png",
-                previousButtonPressedImage = "prev.png",
-                previousButtonX = 230,
-                previousButtonY = 450,
-                previousButtonWidth = 32,
-                previousButtonHeight = 32,
-
-                // Next button
-                nextButtonImage = "next.png",
-                nextButtonHoverImage = "next.png",
-                nextButtonPressedImage = "next.png",
-                nextButtonX = 365,
-                nextButtonY = 450,
-                nextButtonWidth = 32,
-                nextButtonHeight = 32,
-
-                // volume slider position
-                volumeSliderX = 600,
-                volumeSliderY = 760,
-
-                // Current track label position
-                currentTrackLabelX = 270,
-                currentTrackLabelY = 450
-
-            };
-
-            return skin;
-        }
-
         private Skin? loadSkinData(string skinPath)
         {
 
@@ -422,35 +328,46 @@ namespace SIDStreamer
         }
 
         internal Color hexToColor(string hex)
-    {
-
-        if (hex.Equals("transparent", StringComparison.OrdinalIgnoreCase))
         {
-            return Color.Transparent;
+
+            if (hex.Equals("transparent", StringComparison.OrdinalIgnoreCase))
+            {
+                return Color.Transparent;
+            }
+
+            // Fjerner eventuell leading '#'
+            hex = hex.Replace("#", "");
+
+            if (hex.Length == 3)
+            {
+                // Kortform (#RGB → #RRGGBB)
+                hex = string.Concat(
+                    hex[0], hex[0],
+                    hex[1], hex[1],
+                    hex[2], hex[2]
+                );
+            }
+
+            if (hex.Length != 6)
+                throw new ArgumentException("Hex Color code must be 3 or 6 chars long.");
+
+            int r = Convert.ToInt32(hex.Substring(0, 2), 16);
+            int g = Convert.ToInt32(hex.Substring(2, 2), 16);
+            int b = Convert.ToInt32(hex.Substring(4, 2), 16);
+
+            return Color.FromArgb(r, g, b);
         }
 
-        // Fjerner eventuell leading '#'
-        hex = hex.Replace("#", "");
-
-        if (hex.Length == 3)
+        
+        public static List<string> getBaseDirectories(string path)
         {
-            // Kortform (#RGB → #RRGGBB)
-            hex = string.Concat(
-                hex[0], hex[0],
-                hex[1], hex[1],
-                hex[2], hex[2]
-            );
+            if (string.IsNullOrWhiteSpace(path) || !Directory.Exists(path))
+                return new List<string>();
+
+            return new List<string>(Directory.GetDirectories(path, "*", SearchOption.TopDirectoryOnly));
         }
 
-        if (hex.Length != 6)
-            throw new ArgumentException("Hex Color code must be 3 or 6 chars long.");
 
-        int r = Convert.ToInt32(hex.Substring(0, 2), 16);
-        int g = Convert.ToInt32(hex.Substring(2, 2), 16);
-        int b = Convert.ToInt32(hex.Substring(4, 2), 16);
-
-        return Color.FromArgb(r, g, b);
-    }
 
         private string getCurrentSkin()
         {
@@ -458,23 +375,24 @@ namespace SIDStreamer
             return settings.skinName;
         }
 
+
         private void SIDstreamer_Load(object? sender, EventArgs e)
         {
             try
             {
-
-                this.currentSkin = getCurrentSkin(); 
+                string currentSkin = this.getCurrentSkin();
 
                 string baseDir = AppDomain.CurrentDomain.BaseDirectory;
-                string skinDir = Path.Combine(baseDir, "skins", this.currentSkin);
-                var skin = this.loadSkinData(Path.Combine(skinDir, "skin.json"));
-                string imagePath = Path.Combine(skinDir, skin.bgImage);
-                
+                string skinsDir = Path.Combine(baseDir, "skins");
+                string skinDir = Path.Combine(baseDir, "skins", currentSkin);
+                var skin = this.loadSkinData(Path.Combine(skinDir, "settings-skin.json"));
+                string imagePath = Path.Combine(skinDir, skin.bgSettingsImage);
+
                 // Suspend layout and apply shape before first paint
                 SuspendLayout();
 
                 // Load background into managed fields so we can scale before draw/region creation
-                LoadBackground(Path.Combine(skinDir, skin.bgImage));
+                LoadBackground(Path.Combine(skinDir, skin.bgSettingsImage));
 
                 // you can call SetBackgroundSize(...) here before ApplyImageShape if you want to pre-scale:
                 // e.g. SetBackgroundSize(800, 0); // preserve aspect by width
@@ -491,33 +409,8 @@ namespace SIDStreamer
                 // Show the form now that shape/background is applied
                 Opacity = 1;
 
-                // after LoadBackground/ApplyImageShape and before showing form add the image buttons
+
                 var btn = new SIDStreamer.Controls.ImageButton();
-                btn.Location = new Point(skin.playButtonX, skin.playButtonY);
-                btn.Size = new Size(skin.playButtonWidth, skin.playButtonHeight);
-                btn.NormalImage = Image.FromFile(Path.Combine(skinDir, skin.playButtonImage));
-                btn.HoverImage = Image.FromFile(Path.Combine(skinDir, skin.playButtonHoverImage));
-                btn.PressedImage = Image.FromFile(Path.Combine(skinDir, skin.playButtonPressedImage));
-                btn.Click += playButton_Click;
-                Controls.Add(btn);
-
-                btn = new SIDStreamer.Controls.ImageButton();
-                btn.Location = new Point(skin.stopButtonX, skin.stopButtonY);
-                btn.Size = new Size(skin.stopButtonWidth, skin.stopButtonHeight);
-                btn.NormalImage = Image.FromFile(Path.Combine(skinDir, skin.stopButtonImage));
-                btn.HoverImage = Image.FromFile(Path.Combine(skinDir, skin.stopButtonHoverImage));
-                btn.PressedImage = Image.FromFile(Path.Combine(skinDir, skin.stopButtonPressedImage));
-                btn.Click += stopButton_Click;
-                Controls.Add(btn);
-
-                btn = new SIDStreamer.Controls.ImageButton();
-                btn.Location = new Point(skin.openButtonX, skin.openButtonY);
-                btn.Size = new Size(skin.openButtonWidth, skin.openButtonHeight);
-                btn.NormalImage = Image.FromFile(Path.Combine(skinDir, skin.openButtonImage));
-                btn.HoverImage = Image.FromFile(Path.Combine(skinDir, skin.openButtonHoverImage));
-                btn.PressedImage = Image.FromFile(Path.Combine(skinDir, skin.openButtonPressedImage));
-                btn.Click += openFileButton_Click;
-                Controls.Add(btn);
 
                 btn = new SIDStreamer.Controls.ImageButton();
                 btn.Location = new Point(skin.closeButtonX, skin.closeButtonY);
@@ -529,63 +422,47 @@ namespace SIDStreamer
                 Controls.Add(btn);
 
                 btn = new SIDStreamer.Controls.ImageButton();
-                btn.Location = new Point(skin.previousButtonX, skin.previousButtonY);
-                btn.Size = new Size(skin.previousButtonWidth, skin.previousButtonHeight);
-                btn.NormalImage = Image.FromFile(Path.Combine(skinDir, skin.previousButtonImage));
-                btn.HoverImage = Image.FromFile(Path.Combine(skinDir, skin.previousButtonHoverImage));
-                btn.PressedImage = Image.FromFile(Path.Combine(skinDir, skin.previousButtonPressedImage));
-                btn.Click += prevButton_Click;
+                btn.Location = new Point(skin.okButtonX, skin.okButtonY);
+                btn.Size = new Size(skin.okButtonWidth, skin.okButtonHeight);
+                btn.NormalImage = Image.FromFile(Path.Combine(skinDir, skin.okButtonImage));
+                btn.HoverImage = Image.FromFile(Path.Combine(skinDir, skin.okButtonHoverImage));
+                btn.PressedImage = Image.FromFile(Path.Combine(skinDir, skin.okButtonPressedImage));
+                btn.Click += okButton_Click;
                 Controls.Add(btn);
 
                 btn = new SIDStreamer.Controls.ImageButton();
-                btn.Location = new Point(skin.nextButtonX, skin.nextButtonY);
-                btn.Size = new Size(skin.nextButtonWidth, skin.nextButtonHeight);
-                btn.NormalImage = Image.FromFile(Path.Combine(skinDir, skin.nextButtonImage));
-                btn.HoverImage = Image.FromFile(Path.Combine(skinDir, skin.nextButtonHoverImage));
-                btn.PressedImage = Image.FromFile(Path.Combine(skinDir, skin.nextButtonPressedImage));
-                btn.Click += nextButton_Click;
+                btn.Location = new Point(skin.cancelButtonX, skin.cancelButtonY);
+                btn.Size = new Size(skin.cancelButtonWidth, skin.cancelButtonHeight);
+                btn.NormalImage = Image.FromFile(Path.Combine(skinDir, skin.cancelButtonImage));
+                btn.HoverImage = Image.FromFile(Path.Combine(skinDir, skin.cancelButtonHoverImage));
+                btn.PressedImage = Image.FromFile(Path.Combine(skinDir, skin.cancelButtonPressedImage));
+                btn.Click += cancelButton_Click;
                 Controls.Add(btn);
 
-                btn = new SIDStreamer.Controls.ImageButton();
-                btn.Location = new Point(skin.settingsButtonX, skin.settingsButtonY);
-                btn.Size = new Size(skin.settingsButtonWidth, skin.settingsButtonHeight);
-                btn.NormalImage = Image.FromFile(Path.Combine(skinDir, skin.settingsButtonImage));
-                btn.HoverImage = Image.FromFile(Path.Combine(skinDir, skin.settingsButtonHoverImage));
-                btn.PressedImage = Image.FromFile(Path.Combine(skinDir, skin.settingsButtonPressedImage));
-                btn.Click += settingsButton_Click;
-                Controls.Add(btn);
-
-                this.noFocusTrackBar1.ValueChanged += TrackBar1_ValueChanged;
-
-
-                this.label1.Text = skin.copyrightLabel;
-                this.label1.BackColor = this.hexToColor(skin.copyrightLabelBGColor); 
-                this.label1.ForeColor = this.hexToColor(skin.copyrightLabelFGColor);
+                this.skinLabel.Text = skin.selectSkinLabel;
+                this.skinLabel.Location = new Point(skin.selectSkinLabelX, skin.selectSkinLabelY);
+                this.skinLabel.BackColor = this.hexToColor(skin.selectSkinLabelBGColor);
+                this.skinLabel.ForeColor = this.hexToColor(skin.selectSkinLabelFGColor);
                 
-                this.label2.Text = skin.mediaLabel;
-                this.label2.BackColor = this.hexToColor(skin.mediaLabelBGColor);
-                this.label2.ForeColor = this.hexToColor(skin.mediaLabelFGColor);
-                this.labelInfo.Text = skin.infoLabel;
-                this.labelInfo.BackColor = this.hexToColor(skin.infoLabelBGColor);
-                this.labelInfo.ForeColor = this.hexToColor(skin.infoLabelFGColor);
+                
+                
+                // Position and style skincombobox
+                this.skinComboBox.Location = new Point(skin.skinComboBoxX, skin.skinComboBoxY);
+                this.skinComboBox.Size = new Size(skin.skinComboBoxWidth, skin.skinComboBoxHeight);
+                // TODO: Select current skin by default
+                this.skinComboBox.TabIndex = 1;
+                this.skinComboBox.BackColor = this.hexToColor(skin.skinComboBoxBGColor);
+                this.skinComboBox.ForeColor = this.hexToColor(skin.skinComboBoxFGColor);
 
-                this.label3.BackColor = this.hexToColor(skin.currentTrackLabelBGColor);
-                this.label3.ForeColor = this.hexToColor(skin.currentTrackLabelFGColor);
+                // Populate and display skinComboBox
+                var dirs = getBaseDirectories(skinsDir);
 
-                this.noFocusTrackBar1.BackColor = this.hexToColor(skin.volumeSliderBGColor);
-                this.noFocusTrackBar1.ForeColor = this.hexToColor(skin.volumeSliderFGColor);
+                foreach (var d in dirs)
+                {
+                    this.skinComboBox.Items.Add(Path.GetFileName(d));
+                }
 
-                // Set some absolute positions for labels
-                scaleLabelForResolution(this.label1);
-                this.label1.Location = new Point(skin.copyrightLabelX, skin.copyrightLabelY);
-                scaleLabelForResolution(this.label2);
-                this.label2.Location = new Point(skin.mediaLabelX, skin.mediaLabelY);
-                scaleLabelForResolution(this.label3);
-                this.label3.Location = new Point(skin.currentTrackLabelX, skin.currentTrackLabelY);
-                scaleLabelForResolution(this.labelInfo);
-                this.labelInfo.Location = new Point(skin.infoLabelX, skin.infoLabelY);
-                    
-                this.noFocusTrackBar1.Location = new Point(skin.volumeSliderX, skin.volumeSliderY);
+
             }
             catch
             {
@@ -595,195 +472,30 @@ namespace SIDStreamer
         }
 
 
-        private void loadTune()
-        {
-            if (!string.IsNullOrEmpty(this.pathToTune))
-            {
-                if (this.tune != null)
-                {
-                    this.player.stop();
-                    this.tune = null;
-                }
-
-
-                using (FileStream file = new FileStream(this.pathToTune, FileMode.Open, FileAccess.Read))
-                {
-                    this.tune = new SidTune(file);
-                    this.labelInfo.Text = "Author: " + this.tune.Info.InfoString2;
-                    this.labelInfo.Text += Environment.NewLine + "Title: " + this.tune.Info.InfoString1;
-                    this.labelInfo.Text += Environment.NewLine + "Released: " + this.tune.Info.InfoString3;
-                }
-
-                this.updateCurrentSong();
-            }
-        }
-
-
-        private void TrackBar1_ValueChanged(object? sender, EventArgs e)
-        {
-            float vol = (float)noFocusTrackBar1.Value;
-            if (vol > 0.0)
-            {
-                vol = vol / 10;
-            }
-
-            player.setVolume(vol);
-        }
-
-        private void playButton_Click(object? sender, EventArgs e)
-        {
-            if (this.tune != null)
-            {
-                player.stop();
-                player.Start(tune);
-            }
-        }
-
-        private void settingsButton_Click(object? sender, EventArgs e)
-        {
-            SettingsForm settingsForm = new SettingsForm();
-            var result = settingsForm.ShowDialog();
-
-            if (result == DialogResult.OK)
-            {
-                if (this.currentSkin != settingsForm.newlySelectedSkin)
-                {
-                    this.currentSkin = settingsForm.newlySelectedSkin;
-                 
-                    // terminate playback
-                    this.player.stop();
-
-                    // Write to skinsettings.json so that new skin is loaded next time  
-                    SkinSettings settings = new SkinSettings
-                    {
-                        skinName = this.currentSkin
-                    };
-                    string jsonString = JsonSerializer.Serialize(settings, new JsonSerializerOptions { WriteIndented = true });
-                    File.WriteAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "skinsettings.json"), jsonString);
-                    // Restart application to apply new skin
-                    Application.Restart();
-                }
-            }
-            settingsForm.Dispose();
-        }
-
-        private void stopButton_Click(object? sender, EventArgs e)
-        {
-            player.stop();
-            if (tune != null)
-            {
-                tune.Info.currentSong = 1;
-            }
-            this.updateCurrentSong();
-        }
-
         private void closeButton_Click(object? sender, EventArgs e)
         {
-            player.stop();
+            this.DialogResult = DialogResult.Cancel;
             this.Close();
         }
 
-        private void prevButton_Click(object? sender, EventArgs e)
+        private void okButton_Click(object? sender, EventArgs e)
         {
-            if (this.tune != null)
+            if (!string.IsNullOrEmpty(this.skinComboBox.Text))
             {
-                if (tune.Info.currentSong > 1)
-                {
-
-                    switch (player.State)
-                    {
-                        case SID2Types.sid2_player_t.sid2_playing:
-                        case SID2Types.sid2_player_t.sid2_paused:
-                            player.stop();
-                            break;
-                    }
-
-                    tune.Info.currentSong--;
-
-                    player.Start(tune, tune.Info.currentSong);
-
-                    this.updateCurrentSong();
-
-
-                }
+                this.DialogResult = DialogResult.OK;
+                this.newlySelectedSkin = this.skinComboBox.Text;
+                this.Close();
+            }
+            else { 
+                this.DialogResult = DialogResult.Cancel;
+                this.Close();
             }
         }
 
-        private void nextButton_Click(object? sender, EventArgs e)
+        private void cancelButton_Click(object? sender, EventArgs e)
         {
-            if (this.tune != null)
-            {
-                if (this.tune.Info.currentSong < this.tune.Info.songs)
-                {
-
-                    switch (this.player.State)
-                    {
-                        case SID2Types.sid2_player_t.sid2_playing:
-                        case SID2Types.sid2_player_t.sid2_paused:
-                            player.stop();
-                            break;
-                    }
-
-                    tune.Info.currentSong++;
-
-
-                    player.Start(tune, tune.Info.currentSong);
-                    this.updateCurrentSong();
-                }
-            }
-        }
-
-        private void updateCurrentSong()
-        {
-
-            if (this.tune != null)
-            {
-                int tmp = this.tune.Info.currentSong;
-                if (tmp == 0) { tmp = 1; }
-
-                if (tmp < 10)
-                {
-                    this.label3.Text = "0" + tmp + " / ";
-                }
-                else
-                {
-                    this.label3.Text = tmp + " / ";
-                }
-
-                if (this.tune.Info.songs < 10)
-                {
-                    this.label3.Text += "0" + this.tune.Info.songs;
-                }
-                else
-                {
-                    this.label3.Text += this.tune.Info.songs;
-                }
-            }
-            else
-            {
-                this.label3.Text = "00 / 00";
-            }
-        }
-        private void openFileButton_Click(object? sender, EventArgs e)
-        {
-            openFileDialog1.Title = "Select a File";
-            openFileDialog1.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            openFileDialog1.Filter = "SID Files (*.sid)|*.sid|All Files (*.*)|*.*";
-            openFileDialog1.FilterIndex = 1;
-            openFileDialog1.Multiselect = false;
-
-            if (openFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-                string filePath = openFileDialog1.FileName;
-                this.pathToTune = filePath;
-                this.label2.Text = Path.GetFileName(filePath);
-                this.loadTune();
-                player.Start(tune);
-            }
-            else
-            {
-                ;
-            }
+            this.DialogResult = DialogResult.Cancel;
+            this.Close();
         }
 
         // Prevent the default background erase to avoid a white flash AND white boarder around the image.

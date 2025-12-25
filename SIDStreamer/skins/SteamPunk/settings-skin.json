@@ -1,0 +1,47 @@
+{
+  "bgSettingsImage": "settings.png",
+
+  "closeButtonImage": "close.png",
+  "closeButtonHoverImage": "close.png",
+  "closeButtonPressedImage": "close.png",
+  "closeButtonX": 500,
+  "closeButtonY": 90,
+  "closeButtonWidth": 32,
+  "closeButtonHeight": 32,
+
+  "selectSkinLabel": "Select skin:",
+  "selectSkinLabelBGColor": "transparent",
+  "selectSkinLabelFGColor": "#FFFFFF",
+  "selectSkinLabelX": 300,
+  "selectSkinLabelY": 350,
+
+  "okButtonImage": "ok.png",
+  "okButtonHoverImage": "ok.png",
+  "okButtonPressedImage": "ok.png",
+  "okButtonX": 460,
+  "okButtonY": 670,
+  "okButtonWidth": 128,
+  "okButtonHeight": 64,
+
+  "skinComboBoxX": 450,
+  "skinComboBoxY": 350,
+  "skinComboBoxWidth": 300,
+  "skinComboBoxHeight": 64,
+  "skinComboBoxBGColor": "#37240F",
+  "skinComboBoxFGColor": "#FFFFFF",
+
+
+  "cancelButtonImage": "cancel.png",
+  "cancelButtonHoverImage": "cancel.png",
+  "cancelButtonPressedImage": "cancel.png",
+  "cancelButtonX": 610,
+  "cancelButtonY": 670,
+  "cancelButtonWidth": 128,
+  "cancelButtonHeight": 64,
+
+  "logoImage": "logo.png",
+  "logoX": 260,
+  "logoY": 675,
+  "logoWidth": 150,
+  "logoHeight": 0
+}

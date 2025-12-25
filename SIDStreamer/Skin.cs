@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Text.Json;
-
-namespace SIDStream
+﻿namespace SIDStream
 {
     internal class Skin
     {
@@ -50,6 +45,15 @@ namespace SIDStream
         public int logoY { get; set; }
         public int logoWidth { get; set; }
         public int logoHeight { get; set; }
+
+        // Settings button
+        public string settingsButtonImage { get; set; }
+        public string settingsButtonHoverImage { get; set; }
+        public string settingsButtonPressedImage { get; set; }
+        public int settingsButtonX { get; set; }
+        public int settingsButtonY { get; set; }
+        public int settingsButtonWidth { get; set; }
+        public int settingsButtonHeight { get; set; }
 
         // Play button
         public string playButtonImage { get; set; }
@@ -104,5 +108,48 @@ namespace SIDStream
         public int nextButtonY { get; set; }
         public int nextButtonWidth { get; set; }
         public int nextButtonHeight { get; set; }
+
+        // ONLY SETTINGS WINDOW COMPONENTS
+        public string bgSettingsImage { get; set; }
+
+        // ok button
+        public string okButtonImage { get; set; }
+        public string okButtonHoverImage { get; set; }
+        public string okButtonPressedImage { get; set; }
+        public int okButtonX { get; set; }
+        public int okButtonY { get; set; }
+        public int okButtonWidth { get; set; }
+        public int okButtonHeight { get; set; }
+
+        // cancel button
+        public string cancelButtonImage { get; set; }
+        public string cancelButtonHoverImage { get; set; }
+        public string cancelButtonPressedImage { get; set; }
+        public int cancelButtonX { get; set; }
+        public int cancelButtonY { get; set; }
+        public int cancelButtonWidth { get; set; }
+        public int cancelButtonHeight { get; set; }
+
+        // Select skin label
+        public string selectSkinLabel { get; set; }
+        public string selectSkinLabelBGColor { get; set; }
+        public string selectSkinLabelFGColor { get; set; }
+
+        public int selectSkinLabelX { get; set; }
+        public int selectSkinLabelY { get; set; }
+
+        public int skinComboBoxX { get; set; }
+
+        public int skinComboBoxY { get; set; }
+
+        public int skinComboBoxHeight { get; set; }
+
+        public int skinComboBoxWidth { get; set; }
+
+        public string skinComboBoxBGColor { get; set; }
+        public string skinComboBoxFGColor { get; set; }
+
     }
 }
+
+

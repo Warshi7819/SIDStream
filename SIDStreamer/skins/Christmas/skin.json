@@ -69,5 +69,12 @@
   "nextButtonX": 365,
   "nextButtonY": 450,
   "nextButtonWidth": 32,
-  "nextButtonHeight": 32
+  "nextButtonHeight": 32,
+  "settingsButtonImage": "cog.png",
+  "settingsButtonHoverImage": "cog.png",
+  "settingsButtonPressedImage": "cog.png",
+  "settingsButtonX": 860,
+  "settingsButtonY": 165,
+  "settingsButtonWidth": 62,
+  "settingsButtonHeight": 62
 }
