@@ -28,7 +28,7 @@ Well, turns out it gets even more retro :) Now with skin support! Create your ow
 </table>
 
 ## Credits
- - Turns out that I did not write the sid player part of this project! This was written ages ago for the Microsof.XNA library and made open source by what I believe was Ken Händel. But it has later been taken down probably because the Microsoft.XNA library is deprecated long ago. Anyways, credit to Mr. Ken Händel for writing the original SidPlayer code! 
+ - I did not write the sid player (emulation) part of this project! This was written ages ago for the Microsof.XNA library and made open source by what I believe was Ken Händel. But it has later been taken down probably because the Microsoft.XNA library is deprecated long ago. Anyways, credit to Mr. Ken Händel for writing the original SidPlayer code! 
  - Once the MonoGame framework came along I did some super tiny modifications to the original code so that it now works again! And if my memory serves me correct I may have renamed it from SidPlayer to MonoSidPlayer.
 
 ## Features
