@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SIDStream
+﻿namespace SIDStream
 {
     // Class used to serialize and deserialize skin settings from JSON
     internal class SkinSettings
