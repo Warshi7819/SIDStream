@@ -12,9 +12,20 @@ SIDStreamer lets you load and play SID music files! It doesn't get more retro th
 ## Skin Support
 
 Well, turns out it gets even more retro :) Now with skin support! Create your own or have fun with the two skins currently included:
-| Skin Name | Preview Image     |
-| SteamPunk	| ![SteamPunk Skin] |
-| Christmas	| ![Christmas Skin] |
+<table>
+  <tr>
+    <td><b>Skin Name</b></td>
+    <td><b>Preview</b></td>
+   </tr> 
+   <tr>
+      <td>SteamPunk</td>
+      <td>t4</td>
+   </tr>
+   <tr>
+      <td>Christmas</td>
+      <td>t5</td>
+  </tr>
+</table>
 
 ## Credits
  - Turns out that I did not write the sid player part of this project! This was written ages ago for the Microsof.XNA library and made open source by what I believe was Ken Händel. But it has later been taken down probably because the Microsoft.XNA library is deprecated long ago. Anyways, credit to Mr. Ken Händel for writing the original SidPlayer code! 
