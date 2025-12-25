@@ -7,7 +7,7 @@ What is SID? You unthought man of little skill! SID is a music file format (of s
 
 ## Overview
 
-SIDStreamer lets you load and play SID music files! It doesn't get more retro than that.
+SIDStream lets you load and play SID music files! It doesn't get more retro than that.
 
 ## Skin Support
 
