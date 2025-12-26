@@ -1,11 +1,8 @@
 ﻿using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
+using System.Runtime.Intrinsics.Arm;
 using System.Text.Json;
-using System.Drawing;
-using System;
-using System.IO;
-using System.Collections.Generic;
 
 
 namespace SIDStream
@@ -170,8 +167,11 @@ namespace SIDStream
             Invalidate();
         }
 
+        
+        // <summary>
         // Auto scale fonts/labels based on the resolution and DPI setting my dev machine
-        // had at the time of development. (2560x1600 at 200% scaling → 192 DPI)
+        // had at the time of development. (2560x1600 at 200% scaling → 192 DPI) 
+        // </summary>
         public void scaleLabelForResolution(Label lbl)
         {
             // Baseline resolution (your design reference)
@@ -304,6 +304,10 @@ namespace SIDStream
             bgSize = new Size(targetW, targetH);
         }
 
+        // <summary>
+        // Allow dragging the window by holding left mouse button anywhere on the form client area.
+        // (controls will still receive their own mouse events and won't trigger this).
+        // </summary>
         private void SIDstreamer_MouseDown(object? sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
@@ -313,6 +317,9 @@ namespace SIDStream
             }
         }
 
+        // <summary>
+        // Load skin data from JSON file
+        // </summary>
         private Skin? loadSkinData(string skinPath)
         {
 
@@ -320,6 +327,9 @@ namespace SIDStream
             return deserializedSkin;
         }
 
+        // <summary>
+        // Load skin settings from JSON file
+        // </summary>
         private SkinSettings? loadSkinSettings(string skinPath)
         {
 
@@ -327,6 +337,9 @@ namespace SIDStream
             return deserializedSkin;
         }
 
+        // <summary>
+        // Convert hex color string to Color
+        // </summary>
         internal Color hexToColor(string hex)
         {
 
@@ -358,7 +371,9 @@ namespace SIDStream
             return Color.FromArgb(r, g, b);
         }
 
-        
+        // <summary>
+        // Get base directories in a given path
+        // </summary>
         public static List<string> getBaseDirectories(string path)
         {
             if (string.IsNullOrWhiteSpace(path) || !Directory.Exists(path))
@@ -367,15 +382,18 @@ namespace SIDStream
             return new List<string>(Directory.GetDirectories(path, "*", SearchOption.TopDirectoryOnly));
         }
 
-
-
+        // <summary>
+        // Get current skin from skinsettings.json
+        // </summary>
         private string getCurrentSkin()
         {
             SkinSettings? settings = loadSkinSettings(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "skinsettings.json"));
             return settings.skinName;
         }
 
-
+        // <summary>
+        // Load and apply skin during form load
+        // </summary>
         private void SIDstreamer_Load(object? sender, EventArgs e)
         {
             try
@@ -471,13 +489,18 @@ namespace SIDStream
             }
         }
 
-
+        // <summary>
+        // Close button click handler
+        // </summary>
         private void closeButton_Click(object? sender, EventArgs e)
         {
             this.DialogResult = DialogResult.Cancel;
             this.Close();
         }
 
+        // <summary>
+        // OK button click handler
+        // </summary>
         private void okButton_Click(object? sender, EventArgs e)
         {
             if (!string.IsNullOrEmpty(this.skinComboBox.Text))
@@ -492,13 +515,19 @@ namespace SIDStream
             }
         }
 
+        // <summary>
+        // Cancel button click handler
+        // </summary>
         private void cancelButton_Click(object? sender, EventArgs e)
         {
             this.DialogResult = DialogResult.Cancel;
             this.Close();
         }
 
-        // Prevent the default background erase to avoid a white flash AND white boarder around the image.
+        // <summary>
+        // Custom background paint to draw pre-scaled images
+        // Prevent the default background erase to avoid a white flash AND white boarder around the image
+        // </summary>
         protected override void OnPaintBackground(PaintEventArgs e)
         {
             Bitmap? toDraw = bgScaled ?? bgOriginal;
@@ -592,6 +621,9 @@ namespace SIDStream
             this.Region = new Region(gp);
         }
 
+        // <summary>
+        // Dispose managed resources
+        // </summary>
         private void DisposeManagedResources()
         {
             // called by Designer Dispose
