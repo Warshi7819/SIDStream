@@ -38,6 +38,9 @@ namespace SIDStreamer
 
         private string currentSkin = "SteamPunk";
 
+        // <summary>
+        // Constructor - Initializes a new instance of the SIDstreamer form.
+        // </summary>
         public SIDstreamer()
         {
             InitializeComponent();
@@ -173,8 +176,10 @@ namespace SIDStreamer
             Invalidate();
         }
 
+        // <summary>
         // Auto scale fonts/labels based on the resolution and DPI setting my dev machine
         // had at the time of development. (2560x1600 at 200% scaling → 192 DPI)
+        // </summary>
         public void scaleLabelForResolution(Label lbl)
         {
             // Baseline resolution (your design reference)
@@ -222,9 +227,6 @@ namespace SIDStreamer
                 (int)Math.Round(lbl.Size.Height * scaleY)
             );
         }
-
-
-
 
         /// <summary>
         /// Load the background from a relative path (e.g. "skins/christmas.png").
@@ -310,6 +312,9 @@ namespace SIDStreamer
             bgSize = new Size(targetW, targetH);
         }
 
+        // <summary>
+        // Enable window dragging from client area
+        // </summary>
         private void SIDstreamer_MouseDown(object? sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
@@ -319,6 +324,9 @@ namespace SIDStreamer
             }
         }
 
+        // <summary>
+        // Load skin data from JSON file
+        // </summary>
         private Skin? loadSkinData(string skinPath)
         {
 
@@ -326,50 +334,61 @@ namespace SIDStreamer
             return deserializedSkin;
         }
 
+        // <summary>
+        // Load skin settings from JSON file
+        // </summary>
         private SkinSettings? loadSkinSettings(string skinPath)
         {
-
             SkinSettings? deserializedSkin = JsonSerializer.Deserialize<SkinSettings>(File.ReadAllText(skinPath));
             return deserializedSkin;
         }
 
+        // <summary>
+        // Convert hex color string to Color
+        // </summary>
         internal Color hexToColor(string hex)
-    {
-
-        if (hex.Equals("transparent", StringComparison.OrdinalIgnoreCase))
         {
-            return Color.Transparent;
+
+            if (hex.Equals("transparent", StringComparison.OrdinalIgnoreCase))
+            {
+                return Color.Transparent;
+            }
+
+            // Fjerner eventuell leading '#'
+            hex = hex.Replace("#", "");
+
+            if (hex.Length == 3)
+            {
+                // Kortform (#RGB → #RRGGBB)
+                hex = string.Concat(
+                    hex[0], hex[0],
+                    hex[1], hex[1],
+                    hex[2], hex[2]
+                );
+            }
+
+            if (hex.Length != 6)
+                throw new ArgumentException("Hex Color code must be 3 or 6 chars long.");
+
+            int r = Convert.ToInt32(hex.Substring(0, 2), 16);
+            int g = Convert.ToInt32(hex.Substring(2, 2), 16);
+            int b = Convert.ToInt32(hex.Substring(4, 2), 16);
+
+            return Color.FromArgb(r, g, b);
         }
 
-        // Fjerner eventuell leading '#'
-        hex = hex.Replace("#", "");
-
-        if (hex.Length == 3)
-        {
-            // Kortform (#RGB → #RRGGBB)
-            hex = string.Concat(
-                hex[0], hex[0],
-                hex[1], hex[1],
-                hex[2], hex[2]
-            );
-        }
-
-        if (hex.Length != 6)
-            throw new ArgumentException("Hex Color code must be 3 or 6 chars long.");
-
-        int r = Convert.ToInt32(hex.Substring(0, 2), 16);
-        int g = Convert.ToInt32(hex.Substring(2, 2), 16);
-        int b = Convert.ToInt32(hex.Substring(4, 2), 16);
-
-        return Color.FromArgb(r, g, b);
-    }
-
+        // <summary>
+        // Get the current skin name from skinsettings.json
+        // </summary>
         private string getCurrentSkin()
         {
             SkinSettings? settings = loadSkinSettings(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "skinsettings.json"));
             return settings.skinName;
         }
 
+        // <summary>
+        // Form Load event handler - applies skin and initializes controls
+        // </summary>
         private void SIDstreamer_Load(object? sender, EventArgs e)
         {
             try
@@ -506,7 +525,9 @@ namespace SIDStreamer
             }
         }
 
-
+        // <summary>
+        // Load the SID tune from the specified path
+        // </summary>
         private void loadTune()
         {
             if (!string.IsNullOrEmpty(this.pathToTune))
@@ -530,7 +551,9 @@ namespace SIDStreamer
             }
         }
 
-
+        // <summary>
+        // Volume slider value changed event handler
+        // </summary>
         private void TrackBar1_ValueChanged(object? sender, EventArgs e)
         {
             float vol = (float)noFocusTrackBar1.Value;
@@ -542,6 +565,9 @@ namespace SIDStreamer
             player.setVolume(vol);
         }
 
+        // <summary>
+        // Play button click event handler
+        // </summary>
         private void playButton_Click(object? sender, EventArgs e)
         {
             if (this.tune != null)
@@ -551,6 +577,9 @@ namespace SIDStreamer
             }
         }
 
+        // <summary>
+        // Settings button click event handler
+        // </summary>
         private void settingsButton_Click(object? sender, EventArgs e)
         {
             SettingsForm settingsForm = new SettingsForm();
@@ -579,6 +608,9 @@ namespace SIDStreamer
             settingsForm.Dispose();
         }
 
+        // <summary>
+        // Stop button click event handler
+        // </summary>
         private void stopButton_Click(object? sender, EventArgs e)
         {
             player.stop();
@@ -589,12 +621,18 @@ namespace SIDStreamer
             this.updateCurrentSong();
         }
 
+        // <summary>
+        // Close button click event handler
+        // </summary>
         private void closeButton_Click(object? sender, EventArgs e)
         {
             player.stop();
             this.Close();
         }
 
+        // <summary>
+        // Previous button click event handler
+        // </summary>
         private void prevButton_Click(object? sender, EventArgs e)
         {
             if (this.tune != null)
@@ -621,6 +659,9 @@ namespace SIDStreamer
             }
         }
 
+        // <summary>
+        // Next button click event handler
+        // </summary>
         private void nextButton_Click(object? sender, EventArgs e)
         {
             if (this.tune != null)
@@ -645,6 +686,9 @@ namespace SIDStreamer
             }
         }
 
+        // <summary>
+        // Update the current song of SID file label
+        // </summary>
         private void updateCurrentSong()
         {
 
@@ -676,6 +720,10 @@ namespace SIDStreamer
                 this.label3.Text = "00 / 00";
             }
         }
+
+        // <summary>
+        // Open file button click event handler
+        // </summary>
         private void openFileButton_Click(object? sender, EventArgs e)
         {
             openFileDialog1.Title = "Select a File";
@@ -698,7 +746,10 @@ namespace SIDStreamer
             }
         }
 
+        // <summary>
+        // Custom paint background to draw pre-scaled images
         // Prevent the default background erase to avoid a white flash AND white boarder around the image.
+        // </summary>
         protected override void OnPaintBackground(PaintEventArgs e)
         {
             Bitmap? toDraw = bgScaled ?? bgOriginal;
@@ -792,6 +843,9 @@ namespace SIDStreamer
             this.Region = new Region(gp);
         }
 
+        // <summary>
+        // Dispose managed resources
+        // </summary>
         private void DisposeManagedResources()
         {
             // called by Designer Dispose
