@@ -29,43 +29,18 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.skinLabel = new Label();
-            this.skinComboBox = new ComboBox();
             SuspendLayout();
-            // 
-            // skinLabel
-            // 
-            this.skinLabel.AutoSize = true;
-            this.skinLabel.Location = new Point(79, 41);
-            this.skinLabel.Name = "skinLabel";
-            this.skinLabel.Size = new Size(78, 32);
-            this.skinLabel.TabIndex = 0;
-            this.skinLabel.Text = "label1";
-            // 
-            // skinComboBox
-            // 
-            skinComboBox.FormattingEnabled = true;
-            skinComboBox.Location = new Point(209, 38);
-            skinComboBox.Name = "skinComboBox";
-            skinComboBox.Size = new Size(242, 40);
-            skinComboBox.TabIndex = 1;
             // 
             // SettingsForm
             // 
             AutoScaleDimensions = new SizeF(13F, 32F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
-            Controls.Add(skinComboBox);
-            Controls.Add(this.skinLabel);
             Name = "SettingsForm";
             Text = "SettingsForm";
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion
-
-        private Label skinLabel;
-        private ComboBox skinComboBox;
     }
 }

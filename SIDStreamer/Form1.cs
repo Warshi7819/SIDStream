@@ -65,6 +65,9 @@ namespace SIDStreamer
 
             player = new MonoSidPlayer(true);
             player.setVolume(0.5f);
+
+            // If HVSC (High Voltage Sid Collection) is set, then load song length database.
+            
         }
 
         /// <summary>
@@ -442,6 +445,15 @@ namespace SIDStreamer
                 Controls.Add(btn);
 
                 btn = new SIDStreamer.Controls.ImageButton();
+                btn.Location = new Point(skin.playlistButtonX, skin.playlistButtonY);
+                btn.Size = new Size(skin.playlistButtonWidth, skin.playlistButtonHeight);
+                btn.NormalImage = Image.FromFile(Path.Combine(skinDir, skin.playlistButtonImage));
+                btn.HoverImage = Image.FromFile(Path.Combine(skinDir, skin.playlistButtonHoverImage));
+                btn.PressedImage = Image.FromFile(Path.Combine(skinDir, skin.playlistButtonPressedImage));
+                btn.Click += playlistButton_Click;
+                Controls.Add(btn);
+
+                btn = new SIDStreamer.Controls.ImageButton();
                 btn.Location = new Point(skin.openButtonX, skin.openButtonY);
                 btn.Size = new Size(skin.openButtonWidth, skin.openButtonHeight);
                 btn.NormalImage = Image.FromFile(Path.Combine(skinDir, skin.openButtonImage));
@@ -685,6 +697,16 @@ namespace SIDStreamer
                 }
             }
         }
+
+        // <summary>
+        // Playlist button click event handler
+        // </summary>
+        private void playlistButton_Click(object? sender, EventArgs e)
+        {
+            ;
+        }
+
+
 
         // <summary>
         // Update the current song of SID file label

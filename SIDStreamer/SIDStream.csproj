@@ -136,6 +136,9 @@
     <None Update="skins\SteamPunk\logo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="skins\SteamPunk\settings-skin.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="skins\SteamPunk\next.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -148,10 +151,10 @@
     <None Update="skins\SteamPunk\play.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="skins\SteamPunk\prev.png">
+    <None Update="skins\SteamPunk\playlist.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="skins\SteamPunk\settings-skin.json">
+    <None Update="skins\SteamPunk\prev.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="skins\SteamPunk\settings.png">
@@ -169,9 +172,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="C64Music\" />
     <Folder Include="Readme\" />
     <Folder Include="skins\Christmas\" />
-    <Folder Include="skins\SteamPunk\" />
   </ItemGroup>
 
   <ItemGroup>

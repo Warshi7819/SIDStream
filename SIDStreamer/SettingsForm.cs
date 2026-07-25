@@ -3,6 +3,7 @@ using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 using System.Runtime.Intrinsics.Arm;
 using System.Text.Json;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 
 namespace SIDStream
@@ -34,9 +35,33 @@ namespace SIDStream
 
         public string newlySelectedSkin = "";
 
+        Dictionary<string, EventHandler> _buttonHandlers;
+
+        Dictionary<string, Action<System.Windows.Forms.ComboBox, string, string>> _comboInitializers;
+        Dictionary<string, System.Windows.Forms.ComboBox> _comboBoxes; 
+
+
+
+
         public SettingsForm()
         {
             InitializeComponent();
+
+            // Define button handlers to match the ones in the skin settings. 
+            _buttonHandlers = new Dictionary<string, EventHandler>(StringComparer.OrdinalIgnoreCase)
+            {
+                { "close", closeButton_Click },
+                { "ok", okButton_Click },
+                { "cancel", cancelButton_Click }
+            };
+
+            
+            _comboInitializers = new Dictionary<string, Action<System.Windows.Forms.ComboBox, string, string>>(StringComparer.OrdinalIgnoreCase)
+            {
+                { "skin", InitializeSkinCombo }
+            };
+            _comboBoxes = new Dictionary<string, System.Windows.Forms.ComboBox>(StringComparer.OrdinalIgnoreCase);
+
 
             // Load icon
             string iconPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logo", "simple.ico");
@@ -56,7 +81,11 @@ namespace SIDStream
             // (controls will still receive their own mouse events and won't trigger this).
             this.MouseDown += SIDstreamer_MouseDown;
 
+            // Select and display current skin in combo box
+            
+
         }
+
 
         /// <summary>
         /// Load the logo from a relative path (e.g. "logo/logo.png").
@@ -167,7 +196,7 @@ namespace SIDStream
             Invalidate();
         }
 
-        
+
         // <summary>
         // Auto scale fonts/labels based on the resolution and DPI setting my dev machine
         // had at the time of development. (2560x1600 at 200% scaling → 192 DPI) 
@@ -318,16 +347,6 @@ namespace SIDStream
         }
 
         // <summary>
-        // Load skin data from JSON file
-        // </summary>
-        private Skin? loadSkinData(string skinPath)
-        {
-
-            Skin? deserializedSkin = JsonSerializer.Deserialize<Skin>(File.ReadAllText(skinPath));
-            return deserializedSkin;
-        }
-
-        // <summary>
         // Load skin settings from JSON file
         // </summary>
         private SkinSettings? loadSkinSettings(string skinPath)
@@ -403,84 +422,86 @@ namespace SIDStream
                 string baseDir = AppDomain.CurrentDomain.BaseDirectory;
                 string skinsDir = Path.Combine(baseDir, "skins");
                 string skinDir = Path.Combine(baseDir, "skins", currentSkin);
-                var skin = this.loadSkinData(Path.Combine(skinDir, "settings-skin.json"));
-                string imagePath = Path.Combine(skinDir, skin.bgSettingsImage);
+
+                // Parse skin JSON file to get skin parameters
+                var skinParser = new UiSkinParser(Path.Combine(skinDir, "new-settings-skin.json"));
 
                 // Suspend layout and apply shape before first paint
                 SuspendLayout();
 
                 // Load background into managed fields so we can scale before draw/region creation
-                LoadBackground(Path.Combine(skinDir, skin.bgSettingsImage));
+                string imagePath = Path.Combine(skinDir, skinParser.BgSettingsImage);
+                LoadBackground(imagePath);
 
                 // you can call SetBackgroundSize(...) here before ApplyImageShape if you want to pre-scale:
                 // e.g. SetBackgroundSize(800, 0); // preserve aspect by width
 
                 ApplyImageShapeFromLoadedBackground();
 
-                // Load default logo if present
-                LoadLogo(Path.Combine(skinDir, skin.logoImage));
-                SetLogoPosition(skin.logoX, skin.logoY);
-                SetLogoSize(skin.logoWidth, skin.logoHeight); // preserve aspect by width
-
-                ResumeLayout();
-
-                // Show the form now that shape/background is applied
-                Opacity = 1;
-
-
-                var btn = new SIDStreamer.Controls.ImageButton();
-
-                btn = new SIDStreamer.Controls.ImageButton();
-                btn.Location = new Point(skin.closeButtonX, skin.closeButtonY);
-                btn.Size = new Size(skin.closeButtonWidth, skin.closeButtonHeight);
-                btn.NormalImage = Image.FromFile(Path.Combine(skinDir, skin.closeButtonImage));
-                btn.HoverImage = Image.FromFile(Path.Combine(skinDir, skin.closeButtonHoverImage));
-                btn.PressedImage = Image.FromFile(Path.Combine(skinDir, skin.closeButtonPressedImage));
-                btn.Click += closeButton_Click;
-                Controls.Add(btn);
-
-                btn = new SIDStreamer.Controls.ImageButton();
-                btn.Location = new Point(skin.okButtonX, skin.okButtonY);
-                btn.Size = new Size(skin.okButtonWidth, skin.okButtonHeight);
-                btn.NormalImage = Image.FromFile(Path.Combine(skinDir, skin.okButtonImage));
-                btn.HoverImage = Image.FromFile(Path.Combine(skinDir, skin.okButtonHoverImage));
-                btn.PressedImage = Image.FromFile(Path.Combine(skinDir, skin.okButtonPressedImage));
-                btn.Click += okButton_Click;
-                Controls.Add(btn);
-
-                btn = new SIDStreamer.Controls.ImageButton();
-                btn.Location = new Point(skin.cancelButtonX, skin.cancelButtonY);
-                btn.Size = new Size(skin.cancelButtonWidth, skin.cancelButtonHeight);
-                btn.NormalImage = Image.FromFile(Path.Combine(skinDir, skin.cancelButtonImage));
-                btn.HoverImage = Image.FromFile(Path.Combine(skinDir, skin.cancelButtonHoverImage));
-                btn.PressedImage = Image.FromFile(Path.Combine(skinDir, skin.cancelButtonPressedImage));
-                btn.Click += cancelButton_Click;
-                Controls.Add(btn);
-
-                this.skinLabel.Text = skin.selectSkinLabel;
-                this.skinLabel.Location = new Point(skin.selectSkinLabelX, skin.selectSkinLabelY);
-                this.skinLabel.BackColor = this.hexToColor(skin.selectSkinLabelBGColor);
-                this.skinLabel.ForeColor = this.hexToColor(skin.selectSkinLabelFGColor);
-                
-                
-                
-                // Position and style skincombobox
-                this.skinComboBox.Location = new Point(skin.skinComboBoxX, skin.skinComboBoxY);
-                this.skinComboBox.Size = new Size(skin.skinComboBoxWidth, skin.skinComboBoxHeight);
-                // TODO: Select current skin by default
-                this.skinComboBox.TabIndex = 1;
-                this.skinComboBox.BackColor = this.hexToColor(skin.skinComboBoxBGColor);
-                this.skinComboBox.ForeColor = this.hexToColor(skin.skinComboBoxFGColor);
-
-                // Populate and display skinComboBox
-                var dirs = getBaseDirectories(skinsDir);
-
-                foreach (var d in dirs)
+                // Traverse Buttons
+                foreach (var (name, btn) in skinParser.GetButtons())
                 {
-                    this.skinComboBox.Items.Add(Path.GetFileName(d));
+
+                    var butt = new SIDStreamer.Controls.ImageButton();
+                    butt.Location = new Point(UiSkinParser.Int(btn, "x-pos"), UiSkinParser.Int(btn, "y-pos"));
+                    butt.Size = new Size(UiSkinParser.Int(btn, "width"), UiSkinParser.Int(btn, "height"));
+                    butt.NormalImage = Image.FromFile(Path.Combine(skinDir, UiSkinParser.Str(btn, "image")));
+                    butt.HoverImage = Image.FromFile(Path.Combine(skinDir, UiSkinParser.Str(btn, "hover-image")));
+                    butt.PressedImage = Image.FromFile(Path.Combine(skinDir, UiSkinParser.Str(btn, "pressed-image")));
+
+                    if (_buttonHandlers.TryGetValue(name, out var handler))
+                    {
+                        butt.Click += handler;
+                    }
+
+                    Controls.Add(butt);
                 }
 
+                // Traverse Labels
+                foreach (var (name, lbl) in skinParser.GetLabels())
+                {
+                    var label = new Label();
+                    label.Text = UiSkinParser.Str(lbl, "text");
+                    label.Location = new Point(UiSkinParser.Int(lbl, "x-pos"), UiSkinParser.Int(lbl, "y-pos"));
+                    label.BackColor = this.hexToColor(UiSkinParser.Str(lbl, "bg-color"));
+                    label.ForeColor = this.hexToColor(UiSkinParser.Str(lbl, "fg-color"));
+                    label.AutoSize = true;
+                    scaleLabelForResolution(label);
 
+                    Controls.Add(label);
+                }
+
+                // ComboBoxes
+                foreach (var (name, cb) in skinParser.GetComboBoxes())
+                {
+                    var comboBox = new System.Windows.Forms.ComboBox();
+                    comboBox.Location = new Point(UiSkinParser.Int(cb, "x-pos"), UiSkinParser.Int(cb, "y-pos"));
+                    comboBox.Size = new Size(UiSkinParser.Int(cb, "width"), UiSkinParser.Int(cb, "height"));
+                    comboBox.BackColor = this.hexToColor(UiSkinParser.Str(cb, "bg-color"));
+                    comboBox.ForeColor = this.hexToColor(UiSkinParser.Str(cb, "fg-color"));
+
+
+                    // initializer based on combo box name
+                    if (_comboInitializers.TryGetValue(name, out var init))
+                    {
+                        init(comboBox, skinsDir, currentSkin);
+                    }
+
+                    _comboBoxes[name] = comboBox;
+                    Controls.Add(comboBox);
+                }
+
+                // Images
+                foreach (var (name, img) in skinParser.GetImages())
+                {
+                    LoadLogo(Path.Combine(skinDir, UiSkinParser.Str(img, "file")));
+                    SetLogoPosition(UiSkinParser.Int(img, "x-pos"), UiSkinParser.Int(img, "y-pos"));
+                    SetLogoSize(UiSkinParser.Int(img, "width"), UiSkinParser.Int(img, "height")); // preserve aspect by width
+                }
+
+                ResumeLayout();
+                // Show the form now that shape/background is applied
+                Opacity = 1;
             }
             catch
             {
@@ -488,6 +509,27 @@ namespace SIDStream
                 Opacity = 1;
             }
         }
+
+
+        private void InitializeSkinCombo(System.Windows.Forms.ComboBox cb, string skinsDir, string currentSkin)
+        {
+            // Populate and display skinComboBox
+                var dirs = getBaseDirectories(skinsDir);
+
+            foreach (var d in dirs)
+            {
+                cb.Items.Add(Path.GetFileName(d));
+            }
+
+            int index = cb.FindStringExact(currentSkin);
+
+            // If found, select it
+            if (index != -1)
+            {
+                cb.SelectedIndex = index;
+            }
+        }
+
 
         // <summary>
         // Close button click handler
@@ -503,13 +545,15 @@ namespace SIDStream
         // </summary>
         private void okButton_Click(object? sender, EventArgs e)
         {
-            if (!string.IsNullOrEmpty(this.skinComboBox.Text))
+            var cb = _comboBoxes["skin"];
+            if (!string.IsNullOrEmpty(cb.Text))
             {
                 this.DialogResult = DialogResult.OK;
-                this.newlySelectedSkin = this.skinComboBox.Text;
+                this.newlySelectedSkin = cb.Text;
                 this.Close();
             }
-            else { 
+            else
+            {
                 this.DialogResult = DialogResult.Cancel;
                 this.Close();
             }
@@ -632,6 +676,11 @@ namespace SIDStream
 
             bgOriginal?.Dispose();
             bgScaled?.Dispose();
+        }
+
+        private void skinComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ;
         }
     }
 }

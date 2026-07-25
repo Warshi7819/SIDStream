@@ -81,6 +81,13 @@
         public int nextButtonY { get; set; }
         public int nextButtonWidth { get; set; }
         public int nextButtonHeight { get; set; }
+        public string playlistButtonImage { get; set; }
+        public string playlistButtonHoverImage { get; set; }
+        public string playlistButtonPressedImage { get; set; }
+        public int playlistButtonX { get; set; }
+        public int playlistButtonY { get; set; }
+        public int playlistButtonWidth { get; set; }
+        public int playlistButtonHeight { get; set; }
         public string bgSettingsImage { get; set; }
         public string okButtonImage { get; set; }
         public string okButtonHoverImage { get; set; }
