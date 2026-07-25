@@ -1,47 +1,60 @@
 {
-  "bgSettingsImage": "settings.png",
-
-  "closeButtonImage": "close.png",
-  "closeButtonHoverImage": "close.png",
-  "closeButtonPressedImage": "close.png",
-  "closeButtonX": 310,
-  "closeButtonY": 45,
-  "closeButtonWidth": 32,
-  "closeButtonHeight": 32,
-
-  "selectSkinLabel": "Select skin:",
-  "selectSkinLabelBGColor": "transparent",
-  "selectSkinLabelFGColor": "#FFFFFF",
-  "selectSkinLabelX": 90,
-  "selectSkinLabelY": 250,
-
-  "okButtonImage": "ok.png",
-  "okButtonHoverImage": "ok.png",
-  "okButtonPressedImage": "ok.png",
-  "okButtonX": 280,
-  "okButtonY": 500,
-  "okButtonWidth": 128,
-  "okButtonHeight": 60,
-
-  "skinComboBoxX": 240,
-  "skinComboBoxY": 250,
-  "skinComboBoxWidth": 300,
-  "skinComboBoxHeight": 64,
-  "skinComboBoxBGColor": "#37240F",
-  "skinComboBoxFGColor": "#FFFFFF",
-
-
-  "cancelButtonImage": "cancel.png",
-  "cancelButtonHoverImage": "cancel.png",
-  "cancelButtonPressedImage": "cancel.png",
-  "cancelButtonX": 430,
-  "cancelButtonY": 500,
-  "cancelButtonWidth": 128,
-  "cancelButtonHeight": 60,
-
-  "logoImage": "logo.png",
-  "logoX": 50,
-  "logoY": 507,
-  "logoWidth": 150,
-  "logoHeight": 0
+  "bg-image": "settings.png",
+  "buttons": {
+    "close": {
+      "image": "close.png",
+      "hover-image": "close.png",
+      "pressed-image": "close.png",
+      "x-pos": 310,
+      "y-pos": 45,
+      "width": 32,
+      "height": 32
+    },
+    "ok": {
+      "image": "ok.png",
+      "hover-image": "ok.png",
+      "pressed-image": "ok.png",
+      "x-pos": 280,
+      "y-pos": 500,
+      "width": 128,
+      "height": 60
+    },
+    "cancel": {
+      "image": "cancel.png",
+      "hover-image": "cancel.png",
+      "pressed-image": "cancel.png",
+      "x-pos": 430,
+      "y-pos": 500,
+      "width": 128,
+      "height": 60
+    }
+  },
+  "labels": {
+    "selectSkin": {
+      "text": "Select skin:",
+      "bg-color": "transparent",
+      "fg-color": "#FFFFFF",
+      "x-pos": 90,
+      "y-pos": 250
+    }
+  },
+  "comboBoxes": {
+    "skin": {
+      "x-pos": 240,
+      "y-pos": 250,
+      "width": 300,
+      "height": 64,
+      "bg-color": "#37240F",
+      "fg-color": "#FFFFFF"
+    }
+  },
+  "images": {
+    "logo": {
+      "file": "logo.png",
+      "x-pos": 50,
+      "y-pos": 507,
+      "width": 150,
+      "height": 0
+    }
+  }
 }

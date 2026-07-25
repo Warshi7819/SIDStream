@@ -1,80 +1,121 @@
 {
-  "bgImage": "christmas.png",
-  "mediaLabel": "No media selected ...",
-  "mediaLabelX": 203,
-  "mediaLabelY": 700,
-  "mediaLabelBGColor": "#000000",
-  "mediaLabelFGColor": "#FFFFFF",
-  "infoLabel": "SIDstreamer v.1.0",
-  "infoLabelBGColor": "#000000",
-  "infoLabelFGColor": "#32CD32",
-  "infoLabelX": 220,
-  "infoLabelY": 300,
-  "copyrightLabel": "Merry Christmas 2025 - Retro And Gaming \u00A9",
-  "copyrightLabelBGColor": "#000000",
-  "copyrightLabelFGColor": "969696",
-  "copyrightLabelX": 310,
-  "copyrightLabelY": 840,
-  "volumeSliderX": 600,
-  "volumeSliderY": 760,
-  "volumeSliderBGColor": "#000000",
-  "volumeSliderFGColor": "969696",
-  "currentTrackLabelX": 270,
-  "currentTrackLabelY": 450,
-  "currentTrackLabelBGColor": "#000000",
-  "currentTrackLabelFGColor": "#FFFFFF",
-  "logoImage": "logo.png",
-  "logoX": 200,
-  "logoY": 160,
-  "logoWidth": 200,
-  "logoHeight": 0,
-  "playButtonImage": "play.png",
-  "playButtonHoverImage": "play.png",
-  "playButtonPressedImage": "play.png",
-  "playButtonX": 370,
-  "playButtonY": 763,
-  "playButtonWidth": 48,
-  "playButtonHeight": 48,
-  "stopButtonImage": "stop.png",
-  "stopButtonHoverImage": "stop.png",
-  "stopButtonPressedImage": "stop.png",
-  "stopButtonX": 310,
-  "stopButtonY": 763,
-  "stopButtonWidth": 48,
-  "stopButtonHeight": 48,
-  "openButtonImage": "openw.png",
-  "openButtonHoverImage": "openw.png",
-  "openButtonPressedImage": "openw.png",
-  "openButtonX": 210,
-  "openButtonY": 750,
-  "openButtonWidth": 62,
-  "openButtonHeight": 62,
-  "closeButtonImage": "close.png",
-  "closeButtonHoverImage": "close.png",
-  "closeButtonPressedImage": "close.png",
-  "closeButtonX": 950,
-  "closeButtonY": 165,
-  "closeButtonWidth": 62,
-  "closeButtonHeight": 62,
-  "previousButtonImage": "prev.png",
-  "previousButtonHoverImage": "prev.png",
-  "previousButtonPressedImage": "prev.png",
-  "previousButtonX": 230,
-  "previousButtonY": 450,
-  "previousButtonWidth": 32,
-  "previousButtonHeight": 32,
-  "nextButtonImage": "next.png",
-  "nextButtonHoverImage": "next.png",
-  "nextButtonPressedImage": "next.png",
-  "nextButtonX": 365,
-  "nextButtonY": 450,
-  "nextButtonWidth": 32,
-  "nextButtonHeight": 32,
-  "settingsButtonImage": "cog.png",
-  "settingsButtonHoverImage": "cog.png",
-  "settingsButtonPressedImage": "cog.png",
-  "settingsButtonX": 860,
-  "settingsButtonY": 165,
-  "settingsButtonWidth": 62,
-  "settingsButtonHeight": 62
+  "bg-image": "christmas.png",
+  "buttons": {
+    "settings": {
+      "image": "cog.png",
+      "hover-image": "cog.png",
+      "pressed-image": "cog.png",
+      "x-pos": 860,
+      "y-pos": 165,
+      "width": 62,
+      "height": 62
+    },
+    "play": {
+      "image": "play.png",
+      "hover-image": "play.png",
+      "pressed-image": "play.png",
+      "x-pos": 370,
+      "y-pos": 763,
+      "width": 48,
+      "height": 48
+    },
+    "stop": {
+      "image": "stop.png",
+      "hover-image": "stop.png",
+      "pressed-image": "stop.png",
+      "x-pos": 310,
+      "y-pos": 763,
+      "width": 48,
+      "height": 48
+    },
+    "open": {
+      "image": "openw.png",
+      "hover-image": "openw.png",
+      "pressed-image": "openw.png",
+      "x-pos": 210,
+      "y-pos": 750,
+      "width": 62,
+      "height": 62
+    },
+    "close": {
+      "image": "close.png",
+      "hover-image": "close.png",
+      "pressed-image": "close.png",
+      "x-pos": 950,
+      "y-pos": 165,
+      "width": 62,
+      "height": 62
+    },
+    "previous": {
+      "image": "prev.png",
+      "hover-image": "prev.png",
+      "pressed-image": "prev.png",
+      "x-pos": 230,
+      "y-pos": 450,
+      "width": 32,
+      "height": 32
+    },
+    "next": {
+      "image": "next.png",
+      "hover-image": "next.png",
+      "pressed-image": "next.png",
+      "x-pos": 365,
+      "y-pos": 450,
+      "width": 32,
+      "height": 32
+    }
+  },
+  "labels": {
+    "media": {
+      "text": "No media selected ...",
+      "bg-color": "#000000",
+      "fg-color": "#FFFFFF",
+      "x-pos": 203,
+      "y-pos": 700
+    },
+    "info": {
+      "text": "SIDstreamer v.1.0",
+      "bg-color": "#000000",
+      "fg-color": "#32CD32",
+      "x-pos": 220,
+      "y-pos": 300
+    },
+    "copyright": {
+      "text": "Merry Christmas 2025 - Retro And Gaming \u00A9",
+      "bg-color": "#000000",
+      "fg-color": "#969696",
+      "x-pos": 310,
+      "y-pos": 840
+    },
+    "currentTrack": {
+      "text": "00 / 00",
+      "bg-color": "#000000",
+      "fg-color": "#FFFFFF",
+      "x-pos": 270,
+      "y-pos": 450
+    }
+  },
+  "comboBoxes": {
+
+  },
+  "track-bars": {
+    "volume": {
+      "x-pos": 600,
+      "y-pos": 760,
+      "bg-color": "#000000",
+      "height": 80,
+      "width": 208,
+      "value": 5,
+      "large-change": 1
+    }
+  },
+  "images": {
+    "logo": {
+      "file": "logo.png",
+      "x-pos": 200,
+      "y-pos": 160,
+      "width": 200,
+      "height": 0
+    }
+  }
 }
