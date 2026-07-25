@@ -1,5 +1,5 @@
 {
-  "bgSettingsImage": "settings.png",
+  "bg-image": "settings.png",
   "buttons": {
     "close": {
       "image": "close.png",

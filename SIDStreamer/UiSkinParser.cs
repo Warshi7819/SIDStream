@@ -38,8 +38,8 @@ namespace SIDStream
         // ---------------------------
         // Top-level fields
         // ---------------------------
-        public string BgSettingsImage =>
-            _root["bgSettingsImage"]?.ToString() ?? "";
+        public string BgImage =>
+            _root["bg-image"]?.ToString() ?? "";
 
         // ---------------------------
         // ITERATION SUPPORT
@@ -81,6 +81,16 @@ namespace SIDStream
             if (images == null) yield break;
 
             foreach (var kv in images)
+                if (kv.Value is JsonObject o)
+                    yield return (kv.Key, o);
+        }
+
+        public IEnumerable<(string name, JsonObject obj)> GetTrackBars()
+        {
+            var trackBars = GetObject("track-bars");
+            if (trackBars == null) yield break;
+
+            foreach (var kv in trackBars)
                 if (kv.Value is JsonObject o)
                     yield return (kv.Key, o);
         }

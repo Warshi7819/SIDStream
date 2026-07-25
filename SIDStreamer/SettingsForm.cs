@@ -424,13 +424,13 @@ namespace SIDStream
                 string skinDir = Path.Combine(baseDir, "skins", currentSkin);
 
                 // Parse skin JSON file to get skin parameters
-                var skinParser = new UiSkinParser(Path.Combine(skinDir, "new-settings-skin.json"));
+                var skinParser = new UiSkinParser(Path.Combine(skinDir, "settings-skin.json"));
 
                 // Suspend layout and apply shape before first paint
                 SuspendLayout();
 
                 // Load background into managed fields so we can scale before draw/region creation
-                string imagePath = Path.Combine(skinDir, skinParser.BgSettingsImage);
+                string imagePath = Path.Combine(skinDir, skinParser.BgImage);
                 LoadBackground(imagePath);
 
                 // you can call SetBackgroundSize(...) here before ApplyImageShape if you want to pre-scale:
@@ -503,7 +503,7 @@ namespace SIDStream
                 // Show the form now that shape/background is applied
                 Opacity = 1;
             }
-            catch
+            catch (Exception ex) 
             {
                 // swallow — don't block startup if shaping fails
                 Opacity = 1;
