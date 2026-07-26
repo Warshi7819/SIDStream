@@ -14,7 +14,7 @@ namespace sidplay
             }
         }
 
-        public Event GetEventById(int id)
+        public Event? GetEventById(int id)
         {
             foreach (Event ev in this)
             {
@@ -26,7 +26,7 @@ namespace sidplay
 
             return null;
         }
-        public Event GetEventById(int id, EventScheduler context)
+        public Event? GetEventById(int id, EventScheduler context)
         {
             foreach (Event ev in this)
             {

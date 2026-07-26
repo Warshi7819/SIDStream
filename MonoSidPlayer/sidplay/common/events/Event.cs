@@ -33,7 +33,7 @@ namespace sidplay
 
         public long m_clk;
 
-        internal EventScheduler m_context;
+        internal EventScheduler? m_context;
 
         /// <summary>
         /// This variable is set by the event context when it is scheduled
@@ -43,7 +43,7 @@ namespace sidplay
         /// <summary>
         /// Link to the next and previous events in the list.
         /// </summary>
-        public Event m_next, m_prev;
+        public Event? m_next, m_prev;
         public int m_next_id, m_prev_id;
 
         public Event(string name)

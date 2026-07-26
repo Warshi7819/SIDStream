@@ -17,18 +17,18 @@ namespace sidplay
         private const int shortBufferSize = byteBufferSize / 2;
 
         // Initialize to null so we can verify when it's set later on
-        private DynamicSoundEffectInstance dynSound = null;
+        private DynamicSoundEffectInstance? dynSound;
 
-        private MemoryStream memBuffer;
-        private short[] shortBuffer;
-        private byte[] byteBuffer;
+        private MemoryStream memBuffer = null!;
+        private short[] shortBuffer = null!;
+        private byte[] byteBuffer = null!;
 
-        private Thread playThread = null;
+        private Thread? playThread;
 
 #if SILVERLIGHT
         private System.Windows.Threading.DispatcherTimer dispatchTimer;
 #else
-        private System.Timers.Timer dispatchTimer;
+        private System.Timers.Timer? dispatchTimer;
 #endif
 
         private bool aborting = false;
@@ -36,7 +36,7 @@ namespace sidplay
 
         private object lockObj = new object();
 
-        private Player player;
+        private Player? player;
 
         private float currentVolume = 1.0f;
 
@@ -107,6 +107,10 @@ namespace sidplay
         /// <param name="tune">SidTune</param>
         public void Start(SidTune? tune)
         {
+            if (tune == null) 
+            { 
+                return; 
+            }
             Start(tune, 0);
         }
         /// <summary>

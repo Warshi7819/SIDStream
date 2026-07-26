@@ -5,7 +5,7 @@ namespace sidplay
 {
     public class CiaEvent : Event
     {
-        internal SID6526 m_cia;
+        internal SID6526 m_cia = null!;
 
         public override void _event()
         {

@@ -5,7 +5,7 @@ namespace sidplay
 {
     public class CPUEvent : Event
     {
-        internal MOS6510 owner;
+        internal MOS6510 owner = null!;
 
         public CPUEvent(MOS6510 owner)
             : base("CPU")
