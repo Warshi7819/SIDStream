@@ -5,11 +5,11 @@ namespace sidplay
 {
     public class ReSID : SIDEmu
     {
-        private EventScheduler m_context;
+        private EventScheduler m_context = null!;
 
         private event_phase_t m_phase;
 
-        private SID m_sid;
+        private SID m_sid = null!;
 
         private long m_accessClk;
 
@@ -27,7 +27,7 @@ namespace sidplay
         public ReSID()
             : base()
         {
-            m_context = null;
+            m_context = null!;
             m_phase = event_phase_t.EVENT_CLOCK_PHI1;
             m_sid = new SID();
             m_gain = 100;
@@ -282,7 +282,7 @@ namespace sidplay
                     return false;
                 }
                 m_locked = false;
-                m_context = null;
+                m_context = null!;
             }
             else
             {

@@ -269,7 +269,7 @@ namespace sidplay
             {
                 dispatchTimer.Start();
             }
-            player.resume();
+            player!.resume();
         }
 
         private Thread GetPlayThread(Player player, DynamicSoundEffectInstance dynSound, bool isStereo)
@@ -393,7 +393,7 @@ namespace sidplay
         public void SaveToWriter(BinaryWriter writer)
         {
             pause();
-            player.SaveToWriter(writer);
+            player!.SaveToWriter(writer);
         }
         /// <summary>
         /// Used for Deserializing a running player

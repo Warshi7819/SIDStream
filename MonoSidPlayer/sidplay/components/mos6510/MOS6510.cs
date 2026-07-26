@@ -116,14 +116,14 @@ namespace sidplay
 
         protected ProcessorCycle fetchCycle = new ProcessorCycle();
 
-        protected ProcessorCycle[] procCycle;
+        protected ProcessorCycle[]? procCycle;
         protected int procCycle_id;
 
         protected ProcessorOperations[] instrTable = new ProcessorOperations[0x100];
 
         protected ProcessorOperations[] interruptTable = new ProcessorOperations[3];
 
-        protected ProcessorOperations instrCurrent;
+        protected ProcessorOperations? instrCurrent;
         protected int lastInstrCurrent;
 
         protected int instrStartPC;
@@ -180,7 +180,7 @@ namespace sidplay
         /// <summary>
         /// Resolve multiple inheritance
         /// </summary>
-        internal CPUEvent cpuEvent;
+        internal CPUEvent? cpuEvent;
         internal int cpuEvent_id;
 
 
@@ -190,9 +190,9 @@ namespace sidplay
         internal void clock()
         {
             sbyte i = cycleCount++;
-            if (procCycle[i].nosteal || aec)
+            if (procCycle![i].nosteal || aec)
             {
-                procCycle[i].func();
+                procCycle[i]!.func!();
                 return;
             }
             else if (!m_blocked)
@@ -201,7 +201,7 @@ namespace sidplay
                 m_stealingClk = eventContext.getTime(m_phase);
             }
             cycleCount--;
-            eventContext.cancel(cpuEvent);
+            eventContext.cancel(cpuEvent!);
         }
 
         /// <summary>
@@ -239,7 +239,7 @@ namespace sidplay
             aec = true;
 
             m_blocked = false;
-            eventContext.schedule(cpuEvent, 0, m_phase);
+            eventContext.schedule(cpuEvent!, 0, m_phase);
         }
 
         // Declare Interrupt Routines
@@ -1640,7 +1640,7 @@ namespace sidplay
             else
             {
                 cpuEvent = events.GetEventById(cpuEvent_id) as CPUEvent;
-                cpuEvent.owner = this;
+                cpuEvent!.owner = this;
 
 #if DEBUG
                 if (cpuEvent == null)
@@ -1657,7 +1657,7 @@ namespace sidplay
             bool legalMode = true;
             bool legalInstr = true;
 
-            ProcessorCycle[] procCycle_tmp = null;
+            ProcessorCycle[] procCycle_tmp = null!;
 
             #region Function Delegates
             ProcessorCycle.FunctionDelegate dlg_WasteCycle = new ProcessorCycle.FunctionDelegate(WasteCycle);
@@ -3541,7 +3541,7 @@ namespace sidplay
                         if ((cycleCounter) != 0)
                         {
                             instr.cycle = new ProcessorCycle[cycleCounter];
-                            procCycle_tmp = instr.cycle;
+                            procCycle_tmp = instr.cycle!;
 
                             int c = cycleCounter;
                             while (c > 0)
@@ -3567,7 +3567,7 @@ namespace sidplay
                     int cycleCounter = -1;
                     if (pass != 0)
                     {
-                        procCycle_tmp = instr.cycle;
+                        procCycle_tmp = instr.cycle!;
                     }
 
                     switch (i)
@@ -3710,7 +3710,7 @@ namespace sidplay
                         if (cycleCounter != 0)
                         {
                             instr.cycle = new ProcessorCycle[cycleCounter];
-                            procCycle_tmp = instr.cycle;
+                            procCycle_tmp = instr.cycle!;
                             for (int c = 0; c < cycleCounter; c++)
                             {
                                 procCycle_tmp[c] = new ProcessorCycle();
@@ -3774,7 +3774,7 @@ namespace sidplay
                     m_blocked = false;
                 }
 
-                eventContext.schedule(cpuEvent, (eventContext.phase == m_phase ? 1 : 0), m_phase);
+                eventContext.schedule(cpuEvent!, (eventContext.phase == m_phase ? 1 : 0), m_phase);
             }
         }
 
@@ -3930,7 +3930,7 @@ namespace sidplay
             writer.Write(interrupts_irqRequest);
             writer.Write(interrupts_irqLatch);
 
-            if (procCycle.Length == 1)
+            if (procCycle?.Length == 1)
             {
                 if (procCycle[0] == fetchCycle)
                 {

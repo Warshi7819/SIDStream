@@ -504,7 +504,7 @@ namespace sidplay
 
         // Support for various file formats.
 
-        private PSid psid;
+        private PSid psid = null!;
 
         protected LoadStatus PSID_fileSupport(Buffer_sidtt dataBuf)
         {
@@ -584,7 +584,7 @@ namespace sidplay
             status = false;
 
             //info.statusstring = txt_na;
-            info.path = info.infoFileName = info.dataFileName = null;
+            info.path = info.infoFileName = info.dataFileName = null!;
             info.dataFileLen = info.c64dataLen = 0;
             //info.formatstring = txt_na;
             //info.speedstring = txt_na;
@@ -619,7 +619,7 @@ namespace sidplay
 
             for (int sNum = 0; sNum < SIDTUNE_MAX_CREDIT_stringS; sNum++)
             {
-                infostring[sNum] = null;
+                infostring[sNum] = null!;
             }
             info.numberOfInfostrings = 0;
         }

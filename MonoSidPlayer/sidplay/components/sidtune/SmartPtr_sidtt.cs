@@ -10,7 +10,7 @@ namespace sidplay
         }
 
         public SmartPtr_sidtt()
-            : base(null, 0, false)
+            : base(null!, 0, false)
         {
         }
 

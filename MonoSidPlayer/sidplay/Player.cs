@@ -57,43 +57,43 @@ namespace sidplay
 
         #endregion
 
-        internal EventScheduler m_scheduler;
+        internal EventScheduler m_scheduler = null!;
 
-        private SID6510 sid6510;
+        private SID6510 sid6510 = null!;
 
         // Sid objects to use.
 
-        private NullSID nullsid;
+        private NullSID nullsid = null!;
 
-        internal XSID xsid;
+        internal XSID xsid = null!;
 
-        private C64cia1 cia;
+        private C64cia1 cia = null!;
 
-        private C64cia2 cia2;
+        private C64cia2 cia2 = null!;
 
-        private SID6526 sid6526;
+        private SID6526 sid6526 = null!;
 
-        private C64VIC vic;
+        private C64VIC vic = null!;
 
-        private SIDEmu sid;
+        private SIDEmu sid = null!;
 
         /// <summary>
         /// Mapping table in d4xx-d7xx
         /// </summary>
         private int[] m_sidmapper = new int[32];
 
-        private EventMixer mixerEvent;
+        private EventMixer mixerEvent = null!;
 
-        private EventRTC rtc;
+        private EventRTC rtc = null!;
 
         /// <summary>
         /// User Configuration Settings
         /// </summary>
         private SidTuneInfo m_tuneInfo = new SidTuneInfo();
 
-        internal SidTune m_tune;
+        internal SidTune m_tune = null!;
 
-        private short[] m_ram, m_rom;
+        private short[] m_ram = null!, m_rom = null!;
 
         internal sid2_info_t m_info = new sid2_info_t();
 
@@ -123,7 +123,7 @@ namespace sidplay
 
         private int m_sampleIndex;
 
-        private short[] m_sampleBuffer;
+        private short[] m_sampleBuffer = null!;
 
         // C64 environment settings
 
@@ -292,12 +292,12 @@ namespace sidplay
                 {
                     if (m_ram == m_rom)
                     {
-                        m_ram = null;
+                        m_ram = null!;
                     }
                     else
                     {
-                        m_rom = null;
-                        m_ram = null;
+                        m_rom = null!;
+                        m_ram = null!;
                     }
                 }
 
@@ -1072,9 +1072,9 @@ namespace sidplay
         }
 
 
-        internal readMemDelegate mem_readMemByte;
-        internal writeMemDelegate mem_writeMemByte;
-        internal readMemDelegate mem_readMemDataByte;
+        internal readMemDelegate mem_readMemByte = null!;
+        internal writeMemDelegate mem_writeMemByte = null!;
+        internal readMemDelegate mem_readMemDataByte = null!;
 
 
         /// <summary>
@@ -1146,7 +1146,7 @@ namespace sidplay
 
         private delegate long OutputDelegate(short[] buffer, int off);
 
-        private OutputDelegate output;
+        private OutputDelegate output = null!;
 
         // 8 bit sound output generation routines
 
@@ -1340,7 +1340,7 @@ namespace sidplay
             short[] reloc_driver = memPSIDDrv.PSIDDRV;
             int reloc_size = memPSIDDrv.PSIDDRV.Length;
 
-            BufPos bp;
+            BufPos? bp;
             if ((bp = reloc65(reloc_driver, reloc_size, relocAddr - 10)) == null)
             {
                 //m_errorstring = ERR_PSIDDRV_RELOC;
@@ -1543,9 +1543,9 @@ namespace sidplay
             vic = new C64VIC(this);
             mixerEvent = new EventMixer(this);
             rtc = new EventRTC(m_scheduler);
-            m_tune = null;
-            m_ram = null;
-            m_rom = null;
+            m_tune = null!;
+            m_ram = null!;
+            m_rom = null!;
             //m_errorstring = TXT_NA;
             m_fastForwardFactor = 1.0;
             m_mileage = 0;
@@ -1859,7 +1859,7 @@ namespace sidplay
             // Failed configuration with new tune, reject it
             if (ret < 0)
             {
-                m_tune = null;
+                m_tune = null!;
                 return -1;
             }
 
@@ -2048,7 +2048,7 @@ namespace sidplay
             return bufPos;
         }
 
-        private BufPos reloc65(short[] buf, int fsize, int addr)
+        private BufPos? reloc65(short[] buf, int fsize, int addr)
         {
             file65 file = new file65();
             char[] cmp = { (char)1, (char)0, 'o', '6', '5' };
@@ -2180,7 +2180,7 @@ namespace sidplay
             events.AddEvent(cia2.event_tb);
             events.AddEvent(cia2.event_tod);
             events.AddEvent(sid6526.m_taEvent);
-            events.AddEvent(sid6510.cpuEvent);
+            events.AddEvent(sid6510.cpuEvent!);
             events.AddEvent(xsid.xsidEvent);
             events.AddEvent(xsid.ch4.galwayEvent);
             events.AddEvent(xsid.ch4.sampleEvent);
@@ -2303,9 +2303,9 @@ namespace sidplay
             Debug.WriteLine(reader.ReadString()); // Events
 #endif
             EventList events = new EventList(this, m_scheduler, reader);
-            m_scheduler.m_timeWarp = events.GetEventById(m_scheduler.m_timeWarp_id) as EventTimeWarp;
+            m_scheduler.m_timeWarp = (events.GetEventById(m_scheduler.m_timeWarp_id) as EventTimeWarp)!;
 
-            vic = events.GetVIC();
+            vic = events.GetVIC()!;
 
 #if DEBUG
             Debug.WriteLine(reader.ReadString()); // sid6510
@@ -2366,8 +2366,8 @@ namespace sidplay
                 m_sidmapper[i] = reader.ReadInt32();
             }
 
-            mixerEvent = events.GetMixer();
-            rtc = events.GetRTC();
+            mixerEvent = events.GetMixer()!;
+            rtc = events.GetRTC()!;
 
             m_tune = new SidTune(reader);
             m_tuneInfo = m_tune.info;

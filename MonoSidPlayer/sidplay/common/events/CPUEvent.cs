@@ -20,7 +20,7 @@ namespace sidplay
 
         public override void _event()
         {
-            owner.eventContext.schedule(owner.cpuEvent, 1, owner.m_phase);
+            owner.eventContext.schedule(owner.cpuEvent!, 1, owner.m_phase);
             owner.clock();
         }
 

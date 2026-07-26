@@ -154,7 +154,7 @@ namespace sidplay
             }
         }
 
-        public C64VIC GetVIC()
+        public C64VIC? GetVIC()
         {
             foreach (Event ev in this)
             {
@@ -170,7 +170,7 @@ namespace sidplay
             return null;
 #endif
         }
-        public EventMixer GetMixer()
+        public EventMixer? GetMixer()
         {
             foreach (Event ev in this)
             {
@@ -186,7 +186,7 @@ namespace sidplay
             return null;
 #endif
         }
-        public EventRTC GetRTC()
+        public EventRTC? GetRTC()
         {
             foreach (Event ev in this)
             {
@@ -203,7 +203,7 @@ namespace sidplay
 #endif
         }
 
-        public static void SaveEvent2Writer(Event evt, BinaryWriter writer)
+        public static void SaveEvent2Writer(Event? evt, BinaryWriter writer)
         {
             if (evt != null)
             {

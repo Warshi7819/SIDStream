@@ -22,8 +22,8 @@ namespace sidplay
 
         private short[] efficiency = new short[4];
 
-        private short[] source;
-        short[] dest;
+        private short[] source = null!;
+        short[] dest = null!;
 
         private int readPtr;
 
@@ -49,7 +49,7 @@ namespace sidplay
 
         public class Decompressed
         {
-            internal short[] destBufRef;
+            internal short[] destBufRef = null!;
         }
 
         public PP20()

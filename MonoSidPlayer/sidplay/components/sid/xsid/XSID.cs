@@ -37,13 +37,13 @@ namespace sidplay
 
         private Player m_player;
 
-        private SIDEmu m_sid;
+        private SIDEmu m_sid = null!;
+
+        internal Channel ch4 = null!;
+
+        internal Channel ch5 = null!;
 
         private long m_gain;
-
-        internal Channel ch4;
-
-        internal Channel ch5;
 
         private bool muted;
 
@@ -57,7 +57,7 @@ namespace sidplay
 
         internal bool wasRunning;
 
-        private EventList events;
+        private EventList events = null!;
 
         /// <summary>
         /// Resolve multiple inheritance. XSID event
@@ -181,11 +181,11 @@ namespace sidplay
 
             if (xsidEvent_id == -1)
             {
-                xsidEvent = null;
+                xsidEvent = null!;
             }
             else
             {
-                xsidEvent = events.GetEventById(xsidEvent_id) as xSIDEvent;
+                xsidEvent = (events.GetEventById(xsidEvent_id) as xSIDEvent)!;
 
 #if DEBUG
                 if (xsidEvent == null)

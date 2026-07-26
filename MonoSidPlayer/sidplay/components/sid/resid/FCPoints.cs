@@ -8,7 +8,7 @@ namespace sidplay
     // ----------------------------------------------------------------------------
     public class FCPoints
     {
-        public int[][] points;
+        public int[][] points = null!;
 
         public int count;
     }

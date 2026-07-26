@@ -37,7 +37,7 @@ namespace sidplay
         /// <summary>
         /// describing the speed a song is running at
         /// </summary>
-        public string speedstring;
+        public string speedstring = null!;
 
         public int loadAddr;
 
@@ -202,17 +202,17 @@ namespace sidplay
         /// <summary>
         /// path to sidtune files
         /// </summary>
-        internal string path;
+        internal string path = null!;
 
         /// <summary>
         /// a first file: e.g. "foo.c64"; "", if none
         /// </summary>
-        public string dataFileName;
+        public string dataFileName = null!;
 
         /// <summary>
         /// a second file: e.g. "foo.sid"; "", if none
         /// </summary>
-        public string infoFileName;
+        public string infoFileName = null!;
 
 
         public SidTuneInfo()

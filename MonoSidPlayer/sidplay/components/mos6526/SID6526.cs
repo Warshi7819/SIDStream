@@ -58,7 +58,7 @@ namespace sidplay
 
             LoadFromReader(reader);
 
-            m_taEvent = events.GetEventById(m_taEvent_id) as CiaEvent;
+            m_taEvent = (events.GetEventById(m_taEvent_id) as CiaEvent)!;
             m_taEvent.m_cia = this;
 
 #if DEBUG

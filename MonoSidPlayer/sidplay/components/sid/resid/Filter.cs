@@ -185,9 +185,9 @@ namespace sidplay
         /// </summary>
         protected int[] f0_8580 = new int[2048];
 
-        protected int[] f0;
+        protected int[] f0 = null!;
 
-        protected int[][] f0_points;
+        protected int[][] f0_points = null!;
 
 
 
@@ -1365,7 +1365,7 @@ namespace sidplay
             count = reader.ReadInt32();
             if (count == -1)
             {
-                f0_6581 = null;
+                f0_6581 = null!;
             }
             else
             {
@@ -1379,7 +1379,7 @@ namespace sidplay
             count = reader.ReadInt32();
             if (count == -1)
             {
-                f0_8580 = null;
+                f0_8580 = null!;
             }
             else
             {
@@ -1393,7 +1393,7 @@ namespace sidplay
             count = reader.ReadInt32();
             if (count == -1)
             {
-                f0 = null;
+                f0 = null!;
             }
             else
             {
@@ -1407,7 +1407,7 @@ namespace sidplay
             count = reader.ReadInt32();
             if (count == -1)
             {
-                f0_points = null;
+                f0_points = null!;
             }
             else
             {
@@ -1417,7 +1417,7 @@ namespace sidplay
                     count = reader.ReadInt32();
                     if (count == -1)
                     {
-                        f0_points[i] = null;
+                        f0_points[i] = null!;
                     }
                     else
                     {

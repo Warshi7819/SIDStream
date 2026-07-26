@@ -20,7 +20,7 @@ namespace sidplay
         private XSID m_xsid;
 
 
-        private string m_name;
+        private string m_name = null!;
 
 
         internal SampleEvent sampleEvent;
@@ -116,8 +116,8 @@ namespace sidplay
             m_xsid = xsid;
             LoadFromReader(reader);
 
-            sampleEvent = events.GetEventById(sampleEvent_id) as SampleEvent;
-            galwayEvent = events.GetEventById(galwayEvent_id) as GalwayEvent;
+            sampleEvent = (events.GetEventById(sampleEvent_id) as SampleEvent)!;
+            galwayEvent = (events.GetEventById(galwayEvent_id) as GalwayEvent)!;
 
 #if DEBUG
             if (sampleEvent_id > -1 && sampleEvent == null)
@@ -130,8 +130,8 @@ namespace sidplay
             }
 #endif
 
-            sampleEvent.m_ch = this;
-            galwayEvent.m_ch = this;
+            sampleEvent!.m_ch = this;
+            galwayEvent!.m_ch = this;
         }
 
         private void free()

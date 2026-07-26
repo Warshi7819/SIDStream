@@ -7,11 +7,10 @@ namespace sidplay
     /// </summary>
     public class ProcessorOperations
     {
-        internal ProcessorCycle[] cycle;
+        internal ProcessorCycle[]? cycle;
 
         internal ProcessorOperations()
         {
-            cycle = null;
         }
     }
 }

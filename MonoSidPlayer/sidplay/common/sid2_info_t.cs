@@ -5,7 +5,7 @@ namespace sidplay
 {
     public class sid2_info_t
     {
-        public string[] credits;
+        public string[]? credits;
 
         public int channels;
 
@@ -16,7 +16,7 @@ namespace sidplay
         /// <summary>
         /// load, config and stop calls will reset this and remove all pending events! 10th sec resolution.
         /// </summary>
-        public EventScheduler eventContext;
+        public EventScheduler? eventContext;
 
         public int maxsids;
 

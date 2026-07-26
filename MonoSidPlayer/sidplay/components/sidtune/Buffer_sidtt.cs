@@ -4,7 +4,7 @@ namespace sidplay
 {
     public class Buffer_sidtt
     {
-        internal short[] buf;
+        internal short[] buf = null!;
 
         internal int bufLen;
 
@@ -40,7 +40,7 @@ namespace sidplay
         public short[] xferPtr()
         {
             short[] tmpBuf = buf;
-            buf = null;
+            buf = null!;
             return tmpBuf;
         }
 
@@ -68,14 +68,14 @@ namespace sidplay
         {
             if (buf != null && bufLen != 0)
             {
-                buf = null;
+                buf = null!;
             }
             kill();
         }
 
         private void kill()
         {
-            buf = null;
+            buf = null!;
             bufLen = 0;
         }
     }

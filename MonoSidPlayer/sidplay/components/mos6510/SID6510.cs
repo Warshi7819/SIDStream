@@ -78,7 +78,7 @@ namespace sidplay
             if (m_sleeping)
             {
                 m_sleeping = false;
-                eventContext.schedule(cpuEvent, (eventContext.phase == m_phase) ? 1 : 0, m_phase);
+                eventContext.schedule(cpuEvent!, (eventContext.phase == m_phase) ? 1 : 0, m_phase);
             }
         }
 
@@ -91,7 +91,7 @@ namespace sidplay
                 if (m_sleeping)
                 {
                     m_sleeping = false;
-                    eventContext.schedule(cpuEvent, (eventContext.phase == m_phase) ? 1 : 0, m_phase);
+                    eventContext.schedule(cpuEvent!, (eventContext.phase == m_phase) ? 1 : 0, m_phase);
                 }
             }
         }
@@ -110,7 +110,7 @@ namespace sidplay
                         m_sleeping = !(interrupts_irqRequest || (interrupts_pending != 0));
                         if (!m_sleeping)
                         {
-                            eventContext.schedule(cpuEvent, (eventContext.phase == m_phase) ? 1 : 0, m_phase);
+                            eventContext.schedule(cpuEvent!, (eventContext.phase == m_phase) ? 1 : 0, m_phase);
                         }
                     }
                     break;
@@ -255,7 +255,7 @@ namespace sidplay
             // Woken from sleep just to handle the stealing release
             if (m_sleeping)
             {
-                eventContext.cancel(cpuEvent);
+                eventContext.cancel(cpuEvent!);
             }
             else
             {
@@ -267,7 +267,7 @@ namespace sidplay
                         return;
                     }
                 }
-                eventContext.schedule(cpuEvent, 3 - cycle, m_phase);
+                eventContext.schedule(cpuEvent!, 3 - cycle, m_phase);
             }
         }
 

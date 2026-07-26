@@ -113,9 +113,9 @@ namespace sidplay
 
             LoadFromReader(reader);
 
-            event_ta = events.GetEventById(event_ta_id) as EventTa;
-            event_tb = events.GetEventById(event_tb_id) as EventTb;
-            event_tod = events.GetEventById(event_tod_id) as EventTod;
+            event_ta = (events.GetEventById(event_ta_id) as EventTa)!;
+            event_tb = (events.GetEventById(event_tb_id) as EventTb)!;
+            event_tod = (events.GetEventById(event_tod_id) as EventTod)!;
 
 #if DEBUG
             if (event_ta == null)

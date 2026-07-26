@@ -5,9 +5,9 @@ namespace sidplay
 {
     public class Voice
     {
-        internal WaveformGenerator wave;
+        internal WaveformGenerator wave = null!;
 
-        internal EnvelopeGenerator envelope;
+        internal EnvelopeGenerator envelope = null!;
 
         protected bool muted;
 

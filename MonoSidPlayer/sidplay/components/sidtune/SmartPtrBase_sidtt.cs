@@ -18,7 +18,7 @@ namespace sidplay
             }
             else
             {
-                bufBegin = null;
+                bufBegin = null!;
                 pBufCurrent = (bufEnd = 0);
                 bufLen = 0;
                 status = false;
@@ -153,7 +153,7 @@ namespace sidplay
             return status;
         }
 
-        protected short[] bufBegin;
+        protected short[] bufBegin = null!;
 
         protected int bufEnd;
 

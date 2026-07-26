@@ -14,10 +14,10 @@ namespace sidplay
     /// </summary>
     public class WaveformGenerator
     {
-        protected WaveformGenerator sync_source = null;
+        protected WaveformGenerator sync_source = null!;
         private int sync_source_id = -1;
 
-        internal WaveformGenerator sync_dest = null;
+        internal WaveformGenerator sync_dest = null!;
         private int sync_dest_id = -1;
 
         /// <summary>
@@ -63,13 +63,13 @@ namespace sidplay
 
         // Sample data for combinations of waveforms.
 
-        int[] wave__ST;
+        int[] wave__ST = null!;
 
-        int[] wave_P_T;
+        int[] wave_P_T = null!;
 
-        int[] wave_PS_;
+        int[] wave_PS_ = null!;
 
-        int[] wave_PST;
+        int[] wave_PST = null!;
 
         // The gate bit is handled by the EnvelopeGenerator.
 
@@ -976,7 +976,7 @@ namespace sidplay
             count = reader.ReadInt32();
             if (count == -1)
             {
-                wave__ST = null;
+                wave__ST = null!;
             }
             else
             {
@@ -991,7 +991,7 @@ namespace sidplay
             count = reader.ReadInt32();
             if (count == -1)
             {
-                wave_P_T = null;
+                wave_P_T = null!;
             }
             else
             {
@@ -1006,7 +1006,7 @@ namespace sidplay
             count = reader.ReadInt32();
             if (count == -1)
             {
-                wave_PS_ = null;
+                wave_PS_ = null!;
             }
             else
             {
@@ -1021,7 +1021,7 @@ namespace sidplay
             count = reader.ReadInt32();
             if (count == -1)
             {
-                wave_PST = null;
+                wave_PST = null!;
             }
             else
             {
@@ -1052,7 +1052,8 @@ namespace sidplay
                     throw new Exception("unknown Source_WaveID: " + sync_source_id.ToString());
 #endif
                 case -1:
-                    sync_source = null;
+                    sync_source = null!
+;
                     break;
             }
 
@@ -1072,7 +1073,8 @@ namespace sidplay
                     throw new Exception("unknown Dest_WaveID: " + sync_dest_id.ToString());
 #endif
                 case -1:
-                    sync_dest = null;
+                    sync_dest = null!
+;
                     break;
             }
         }

@@ -29,9 +29,9 @@ namespace sidplay
 
         protected Voice voice0, voice1, voice2;
 
-        public Filter filter;
+        public Filter filter = null!;
 
-        protected ExternalFilter extfilt;
+        protected ExternalFilter extfilt = null!;
 
 
         protected int bus_value;
@@ -66,12 +66,12 @@ namespace sidplay
         /// <summary>
         /// Ring buffer with overflow for contiguous storage of RINGSIZE samples
         /// </summary>
-        protected short[] sample;
+        protected short[] sample = null!;
 
         /// <summary>
         /// FIR_RES filter tables (FIR_N*FIR_RES)
         /// </summary>
-        protected short[] fir;
+        protected short[] fir = null!;
 
 
         /// <summary>
@@ -87,8 +87,8 @@ namespace sidplay
             extfilt = new ExternalFilter();
 
             // Initialize pointers.
-            sample = null;
-            fir = null;
+            sample = null!;
+            fir = null!;
 
             voice0.set_sync_source(voice2);
             voice1.set_sync_source(voice0);
@@ -588,8 +588,8 @@ namespace sidplay
             // FIR initialization is only necessary for resampling
             if (method != SIDDefs.sampling_method.SAMPLE_RESAMPLE_INTERPOLATE && method != SIDDefs.sampling_method.SAMPLE_RESAMPLE_FAST)
             {
-                sample = null;
-                fir = null;
+                sample = null!;
+                fir = null!;
                 return true;
             }
 
@@ -631,7 +631,7 @@ namespace sidplay
             fir_RES = 1 << n;
 
             // Allocate memory for FIR tables.
-            fir = null;
+            fir = null!;
             fir = new short[fir_N * fir_RES];
 
             // Calculate fir_RES FIR tables for linear interpolation.
@@ -1257,7 +1257,7 @@ namespace sidplay
             count = reader.ReadInt32();
             if (count == -1)
             {
-                sample = null;
+                sample = null!;
             }
             else
             {
@@ -1271,7 +1271,7 @@ namespace sidplay
             count = reader.ReadInt32();
             if (count == -1)
             {
-                fir = null;
+                fir = null!;
             }
             else
             {
