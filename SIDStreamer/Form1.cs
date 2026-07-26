@@ -696,7 +696,8 @@ namespace SIDStreamer
         {
             if (playlistForm == null || playlistForm.IsDisposed)
             {
-                playlistForm = new PlaylistForm(this.currentHvscPath);
+                string skinDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "skins", this.currentSkin);
+                playlistForm = new PlaylistForm(this.currentHvscPath, skinDir);
                 playlistForm.TrackSelected += Playlist_TrackSelected;
             }
             playlistForm.Show();

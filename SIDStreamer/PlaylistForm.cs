@@ -1,4 +1,6 @@
+using System.Globalization;
 using System.Security.Cryptography;
+using System.Text.Json.Nodes;
 using SIDStreamer.Playlists;
 
 namespace SIDStreamer
@@ -15,12 +17,14 @@ namespace SIDStreamer
 
         public event EventHandler<int>? TrackSelected;
 
-        public PlaylistForm(string hvscPath)
+        public PlaylistForm(string hvscPath, string skinDir)
         {
             InitializeComponent();
 
             string iconPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logo", "simple.ico");
             this.Icon = new Icon(iconPath);
+
+            ApplySkinColors(skinDir);
 
             _c64MusicPath = hvscPath;
             _songLengths = new SongLengthDatabase(_c64MusicPath);
@@ -498,6 +502,79 @@ namespace SIDStreamer
                 entry.LengthSeconds = songEntry.PrimaryLengthSeconds;
                 entry.LengthDisplay = songEntry.PrimaryLength;
             }
+        }
+
+        private void ApplySkinColors(string skinDir)
+        {
+            try
+            {
+                var skinJson = Path.Combine(skinDir, "skin.json");
+                if (!File.Exists(skinJson)) return;
+
+                var root = JsonNode.Parse(File.ReadAllText(skinJson));
+                var playlist = root?["playlist"] as JsonObject;
+                if (playlist == null) return;
+
+                var bg = ParseHexColor(playlist["bg-color"]?.ToString());
+                var fg = ParseHexColor(playlist["fg-color"]?.ToString());
+
+                if (bg == null && fg == null) return;
+
+                if (bg != null)
+                {
+                    this.BackColor = bg.Value;
+                    browserTree.BackColor = bg.Value;
+                    playlistList.BackColor = bg.Value;
+                    searchBox.BackColor = bg.Value;
+                    searchButton.BackColor = bg.Value;
+                    addButton.BackColor = bg.Value;
+                    addFileButton.BackColor = bg.Value;
+                    removeButton.BackColor = bg.Value;
+                    moveUpButton.BackColor = bg.Value;
+                    moveDownButton.BackColor = bg.Value;
+                    clearButton.BackColor = bg.Value;
+                    statusStrip.BackColor = bg.Value;
+                }
+
+                if (fg != null)
+                {
+                    browserLabel.ForeColor = fg.Value;
+                    playlistLabel.ForeColor = fg.Value;
+                    browserTree.ForeColor = fg.Value;
+                    playlistList.ForeColor = fg.Value;
+                    searchBox.ForeColor = fg.Value;
+                    searchButton.ForeColor = fg.Value;
+                    addButton.ForeColor = fg.Value;
+                    addFileButton.ForeColor = fg.Value;
+                    removeButton.ForeColor = fg.Value;
+                    moveUpButton.ForeColor = fg.Value;
+                    moveDownButton.ForeColor = fg.Value;
+                    clearButton.ForeColor = fg.Value;
+                    statusStrip.ForeColor = fg.Value;
+                }
+            }
+            catch
+            {
+                // Missing or malformed playlist section — fall back to default colors
+            }
+        }
+
+        private static Color? ParseHexColor(string? hex)
+        {
+            if (string.IsNullOrWhiteSpace(hex)) return null;
+            if (hex.Equals("transparent", StringComparison.OrdinalIgnoreCase)) return null;
+
+            hex = hex.Replace("#", "");
+            if (hex.Length == 3)
+                hex = string.Concat(hex[0], hex[0], hex[1], hex[1], hex[2], hex[2]);
+
+            if (hex.Length != 6) return null;
+
+            if (!int.TryParse(hex[..2], NumberStyles.HexNumber, null, out int r)) return null;
+            if (!int.TryParse(hex[2..4], NumberStyles.HexNumber, null, out int g)) return null;
+            if (!int.TryParse(hex[4..6], NumberStyles.HexNumber, null, out int b)) return null;
+
+            return Color.FromArgb(r, g, b);
         }
 
         private void SearchButton_Click(object? sender, EventArgs e)
