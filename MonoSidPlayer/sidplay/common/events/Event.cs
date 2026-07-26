@@ -29,7 +29,7 @@ namespace sidplay
 
         public int m_id;
 
-        public string m_name;
+        public string m_name = null!;
 
         public long m_clk;
 

@@ -16,23 +16,23 @@ namespace sidplay
 
         private long m_events;
 
-        internal EventTimeWarp m_timeWarp;
+        internal EventTimeWarp m_timeWarp = null!;
         internal int m_timeWarp_id;
 
-        internal Player m_player;
+        internal Player m_player = null!;
 
         /// <summary>
         /// Used to prevent overflowing by timewarping the event clocks
         /// </summary>
         public override void _event()
         {
-            Event e = m_next;
+            Event e = m_next!;
 
             m_absClk += m_clk;
             while (e.m_pending)
             {
                 e.m_clk -= m_clk;
-                e = e.m_next;
+                e = e.m_next!;
             }
             m_clk = 0;
 
@@ -49,8 +49,8 @@ namespace sidplay
         private void cancelPending(Event _event)
         {
             _event.m_pending = false;
-            _event.m_prev.m_next = _event.m_next;
-            _event.m_next.m_prev = _event.m_prev;
+            _event.m_prev!.m_next = _event.m_next;
+            _event.m_next!.m_prev = _event.m_prev;
             m_events--;
         }
 
@@ -87,13 +87,13 @@ namespace sidplay
         public void reset()
         {
             // Remove all events
-            Event e = m_next;
+            Event e = m_next!;
 
             m_pending = false;
             while (e.m_pending)
             {
                 e.m_pending = false;
-                e = e.m_next;
+                e = e.m_next!;
             }
             m_next = this;
             m_prev = this;
@@ -116,16 +116,16 @@ namespace sidplay
                 clk += (((m_absClk + clk) & 1) ^ (phase == event_phase_t.EVENT_CLOCK_PHI1 ? 0 : 1));
 
                 // Now put in the correct place so we don't need to keep searching the list later.
-                Event e = m_next;
+                Event e = m_next!;
                 long count = m_events;
                 while ((count-- != 0) && (e.m_clk <= clk))
                 {
-                    e = e.m_next;
+                    e = e.m_next!;
                 }
 
                 _event.m_next = e;
                 _event.m_prev = e.m_prev;
-                e.m_prev.m_next = _event;
+                e.m_prev!.m_next = _event;
                 e.m_prev = _event;
                 _event.m_pending = true;
                 _event.m_clk = clk;
@@ -140,8 +140,8 @@ namespace sidplay
 
         public void clock()
         {
-            m_clk = m_next.m_clk;
-            dispatch(m_next);
+            m_clk = m_next!.m_clk;
+            dispatch(m_next!);
         }
 
         /// <summary>

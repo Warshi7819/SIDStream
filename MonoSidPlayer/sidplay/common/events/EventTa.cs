@@ -5,7 +5,7 @@ namespace sidplay
 {
     public class EventTa : Event
     {
-        internal MOS6526 m_cia;
+        internal MOS6526 m_cia = null!;
 
         internal int ciaId;
 

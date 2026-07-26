@@ -5,7 +5,7 @@ namespace sidplay
 {
     public class xSIDEvent : Event
     {
-        internal XSID owner;
+        internal XSID owner = null!;
 
         public xSIDEvent(XSID owner)
             : base("xSID")

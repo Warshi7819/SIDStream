@@ -5,7 +5,7 @@ namespace sidplay
 {
     public class GalwayEvent : Event
     {
-        internal Channel m_ch;
+        internal Channel m_ch = null!;
 
         public int chId;
 

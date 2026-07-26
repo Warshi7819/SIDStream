@@ -4,14 +4,14 @@ namespace sidplay
 {
     public class file65
     {
-        internal short[] buf;
+        internal short[] buf = null!;
         internal int tbase, tlen, dbase, dlen, bbase, zbase;
         internal int tdiff, ddiff, bdiff, zdiff;
-        internal short[] segt;
-        internal short[] segd;
-        internal short[] utab;
-        internal short[] rttab;
-        internal short[] rdtab;
-        internal short[] extab;
+        internal short[] segt = null!;
+        internal short[] segd = null!;
+        internal short[] utab = null!;
+        internal short[] rttab = null!;
+        internal short[] rdtab = null!;
+        internal short[] extab = null!;
     }
 }
