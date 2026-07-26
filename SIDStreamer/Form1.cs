@@ -12,6 +12,7 @@ namespace SIDStreamer
         private MonoSidPlayer player;
         private SidTune? tune;
         private string? pathToTune;
+        private PlaylistForm? playlistForm;
 
         // Logo fields
         private Bitmap? logoOriginal;
@@ -37,6 +38,8 @@ namespace SIDStreamer
         private const int HTCAPTION = 0x02;
 
         private string currentSkin = "SteamPunk";
+        private string currentHvscPath = "";
+       
 
         Dictionary<string, EventHandler> _buttonHandlers;
         Dictionary<string, EventHandler> _trackBarHandlers;
@@ -357,9 +360,9 @@ namespace SIDStreamer
         // <summary>
         // Load skin settings from JSON file
         // </summary>
-        private SkinSettings? loadSkinSettings(string skinPath)
+        private SIDStreamSettings? loadSkinSettings(string skinPath)
         {
-            SkinSettings? deserializedSkin = JsonSerializer.Deserialize<SkinSettings>(File.ReadAllText(skinPath));
+            SIDStreamSettings? deserializedSkin = JsonSerializer.Deserialize<SIDStreamSettings>(File.ReadAllText(skinPath));
             return deserializedSkin;
         }
 
@@ -398,12 +401,13 @@ namespace SIDStreamer
         }
 
         // <summary>
-        // Get the current skin name from skinsettings.json
+        // Get the current settings from SIDStream-settings.json
         // </summary>
-        private string getCurrentSkin()
+        private void setCurrentSettings()
         {
-            SkinSettings? settings = loadSkinSettings(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "skinsettings.json"));
-            return settings.skinName;
+            SIDStreamSettings? settings = loadSkinSettings(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SIDStream-settings.json"));
+            this.currentSkin = settings.skinName;
+            this.currentHvscPath = settings.hvscPath;
         }
 
         // <summary>
@@ -414,7 +418,7 @@ namespace SIDStreamer
             try
             {
 
-                this.currentSkin = getCurrentSkin(); 
+                setCurrentSettings(); 
 
                 string baseDir = AppDomain.CurrentDomain.BaseDirectory;
                 string skinDir = Path.Combine(baseDir, "skins", this.currentSkin);
@@ -561,6 +565,7 @@ namespace SIDStreamer
             {
                 player.stop();
                 player.Start(tune);
+                updateCurrentSong();
             }
         }
 
@@ -574,22 +579,37 @@ namespace SIDStreamer
 
             if (result == DialogResult.OK)
             {
+
+                if (this.currentHvscPath == settingsForm.newlySelectedHvscPath && this.currentSkin == settingsForm.newlySelectedSkin)
+                {
+                    // No change, no need to save
+                    return;
+                }
+
+                // Write to SIDStream-settings.json so that new skin is loaded next time  
+                SIDStreamSettings settings = new SIDStreamSettings
+                {
+                    skinName = this.currentSkin,
+                    hvscPath = settingsForm.newlySelectedHvscPath
+                };
+                string jsonString = JsonSerializer.Serialize(settings, new JsonSerializerOptions { WriteIndented = true });
+                File.WriteAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SIDStream-settings.json"), jsonString);
+
+
+
+
                 if (this.currentSkin != settingsForm.newlySelectedSkin)
                 {
-                    this.currentSkin = settingsForm.newlySelectedSkin;
-                 
                     // terminate playback
                     this.player.stop();
-
-                    // Write to skinsettings.json so that new skin is loaded next time  
-                    SkinSettings settings = new SkinSettings
-                    {
-                        skinName = this.currentSkin
-                    };
-                    string jsonString = JsonSerializer.Serialize(settings, new JsonSerializerOptions { WriteIndented = true });
-                    File.WriteAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "skinsettings.json"), jsonString);
-                    // Restart application to apply new skin
+                    // restart app, which should re-read settings from file
                     Application.Restart();
+                }
+                else 
+                {
+                    // set new settings as currentHvscPath has changed. 
+                    this.currentSkin = settingsForm.newlySelectedSkin;
+                    this.currentHvscPath = settingsForm.newlySelectedHvscPath;
                 }
             }
             settingsForm.Dispose();
@@ -601,10 +621,6 @@ namespace SIDStreamer
         private void stopButton_Click(object? sender, EventArgs e)
         {
             player.stop();
-            if (tune != null)
-            {
-                tune.Info.currentSong = 1;
-            }
             this.updateCurrentSong();
         }
 
@@ -678,7 +694,25 @@ namespace SIDStreamer
         // </summary>
         private void playlistButton_Click(object? sender, EventArgs e)
         {
-            ;
+            if (playlistForm == null || playlistForm.IsDisposed)
+            {
+                playlistForm = new PlaylistForm(this.currentHvscPath);
+                playlistForm.TrackSelected += Playlist_TrackSelected;
+            }
+            playlistForm.Show();
+            playlistForm.BringToFront();
+        }
+
+        private void Playlist_TrackSelected(object? sender, int index)
+        {
+            var entry = playlistForm.CurrentPlaylist.CurrentTrack;
+            if (entry == null) return;
+
+            this.pathToTune = entry.FilePath;
+            _labels["media"].Text = entry.Title;
+            this.loadTune();
+            player.Start(tune);
+            updateCurrentSong();
         }
 
 

@@ -27,6 +27,15 @@
       "y-pos": 670,
       "width": 128,
       "height": 64
+    },
+    "open": {
+      "image": "open.png",
+      "hover-image": "open.png",
+      "pressed-image": "open.png",
+      "x-pos": 510,
+      "y-pos": 410,
+      "width": 32,
+      "height": 32
     }
   },
   "labels": {
@@ -36,6 +45,20 @@
       "fg-color": "#FFFFFF",
       "x-pos": 300,
       "y-pos": 350
+    },
+    "selectHvscPath": {
+      "text": "Select HVSC PATH:",
+      "bg-color": "transparent",
+      "fg-color": "#FFFFFF",
+      "x-pos": 290,
+      "y-pos": 410
+    },
+    "hvscPath": {
+      "text": "No path selected ...",
+      "bg-color": "transparent",
+      "fg-color": "#D9D9D9",
+      "x-pos": 290,
+      "y-pos": 440
     }
   },
   "comboBoxes": {

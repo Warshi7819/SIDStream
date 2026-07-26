@@ -34,14 +34,17 @@ namespace SIDStream
         private const int HTCAPTION = 0x02;
 
         public string newlySelectedSkin = "";
+        public string newlySelectedHvscPath = "";
 
         Dictionary<string, EventHandler> _buttonHandlers;
 
-        Dictionary<string, Action<System.Windows.Forms.ComboBox, string, string>> _comboInitializers;
-        Dictionary<string, System.Windows.Forms.ComboBox> _comboBoxes; 
+        Dictionary<string, Action<System.Windows.Forms.ComboBox, string>> _comboInitializers;
+        Dictionary<string, Action<Label>> _labelInitializers;
+        Dictionary<string, System.Windows.Forms.ComboBox> _comboBoxes;
+        Dictionary<string, Label> _labels;
 
-
-
+        string currentHvscPath = "";
+        string currentSkin = "";
 
         public SettingsForm()
         {
@@ -52,16 +55,20 @@ namespace SIDStream
             {
                 { "close", closeButton_Click },
                 { "ok", okButton_Click },
-                { "cancel", cancelButton_Click }
+                { "cancel", cancelButton_Click },
+                { "open", openButton_Click }
             };
 
-            
-            _comboInitializers = new Dictionary<string, Action<System.Windows.Forms.ComboBox, string, string>>(StringComparer.OrdinalIgnoreCase)
+            _comboInitializers = new Dictionary<string, Action<System.Windows.Forms.ComboBox, string>>(StringComparer.OrdinalIgnoreCase)
             {
                 { "skin", InitializeSkinCombo }
             };
+            _labelInitializers = new Dictionary<string, Action<Label>>(StringComparer.OrdinalIgnoreCase)
+            {
+                { "hvscPath", InitializehvscPathLabel }
+            };
             _comboBoxes = new Dictionary<string, System.Windows.Forms.ComboBox>(StringComparer.OrdinalIgnoreCase);
-
+            _labels = new Dictionary<string, Label>();
 
             // Load icon
             string iconPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logo", "simple.ico");
@@ -349,10 +356,10 @@ namespace SIDStream
         // <summary>
         // Load skin settings from JSON file
         // </summary>
-        private SkinSettings? loadSkinSettings(string skinPath)
+        private SIDStreamSettings? loadSkinSettings(string skinPath)
         {
 
-            SkinSettings? deserializedSkin = JsonSerializer.Deserialize<SkinSettings>(File.ReadAllText(skinPath));
+            SIDStreamSettings? deserializedSkin = JsonSerializer.Deserialize<SIDStreamSettings>(File.ReadAllText(skinPath));
             return deserializedSkin;
         }
 
@@ -402,12 +409,13 @@ namespace SIDStream
         }
 
         // <summary>
-        // Get current skin from skinsettings.json
+        // Set current settings from SIDStream-settings.json
         // </summary>
-        private string getCurrentSkin()
+        private void setCurrentSettings()
         {
-            SkinSettings? settings = loadSkinSettings(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "skinsettings.json"));
-            return settings.skinName;
+            SIDStreamSettings? settings = loadSkinSettings(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SIDStream-settings.json"));
+            this.currentSkin = settings.skinName;
+            this.currentHvscPath = settings.hvscPath;
         }
 
         // <summary>
@@ -417,11 +425,11 @@ namespace SIDStream
         {
             try
             {
-                string currentSkin = this.getCurrentSkin();
+                setCurrentSettings();
 
                 string baseDir = AppDomain.CurrentDomain.BaseDirectory;
                 string skinsDir = Path.Combine(baseDir, "skins");
-                string skinDir = Path.Combine(baseDir, "skins", currentSkin);
+                string skinDir = Path.Combine(baseDir, "skins", this.currentSkin);
 
                 // Parse skin JSON file to get skin parameters
                 var skinParser = new UiSkinParser(Path.Combine(skinDir, "settings-skin.json"));
@@ -468,6 +476,13 @@ namespace SIDStream
                     label.AutoSize = true;
                     scaleLabelForResolution(label);
 
+                    _labels.Add(name, label);
+
+                    if (_labelInitializers.TryGetValue(name, out var init))
+                    {
+                        init(label);
+                    }
+
                     Controls.Add(label);
                 }
 
@@ -484,7 +499,7 @@ namespace SIDStream
                     // initializer based on combo box name
                     if (_comboInitializers.TryGetValue(name, out var init))
                     {
-                        init(comboBox, skinsDir, currentSkin);
+                        init(comboBox, skinsDir);
                     }
 
                     _comboBoxes[name] = comboBox;
@@ -511,7 +526,7 @@ namespace SIDStream
         }
 
 
-        private void InitializeSkinCombo(System.Windows.Forms.ComboBox cb, string skinsDir, string currentSkin)
+        private void InitializeSkinCombo(System.Windows.Forms.ComboBox cb, string skinsDir)
         {
             // Populate and display skinComboBox
                 var dirs = getBaseDirectories(skinsDir);
@@ -521,13 +536,18 @@ namespace SIDStream
                 cb.Items.Add(Path.GetFileName(d));
             }
 
-            int index = cb.FindStringExact(currentSkin);
+            int index = cb.FindStringExact(this.currentSkin);
 
             // If found, select it
             if (index != -1)
             {
                 cb.SelectedIndex = index;
             }
+        }
+
+        private void InitializehvscPathLabel(Label lb)
+        {
+            lb.Text = this.currentHvscPath;
         }
 
 
@@ -550,6 +570,10 @@ namespace SIDStream
             {
                 this.DialogResult = DialogResult.OK;
                 this.newlySelectedSkin = cb.Text;
+                if (_labels.ContainsKey("hvscPath"))
+                {
+                    this.newlySelectedHvscPath = _labels["hvscPath"].Text;
+                }
                 this.Close();
             }
             else
@@ -566,6 +590,28 @@ namespace SIDStream
         {
             this.DialogResult = DialogResult.Cancel;
             this.Close();
+        }
+
+        
+        // <summary>
+        // Cancel button click handler
+        // </summary>
+        private void openButton_Click(object? sender, EventArgs e)
+        {
+            using var dialog = new FolderBrowserDialog();
+            dialog.Description = "Select HVSC directory";
+            dialog.ShowNewFolderButton = false;
+
+            if (!string.IsNullOrEmpty(newlySelectedHvscPath))
+                dialog.SelectedPath = newlySelectedHvscPath;
+
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                if (_labels.ContainsKey("hvscPath"))
+                {
+                    _labels["hvscPath"].Text = dialog.SelectedPath;
+                }
+            }
         }
 
         // <summary>

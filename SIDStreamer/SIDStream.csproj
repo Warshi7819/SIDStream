@@ -52,7 +52,7 @@
     <None Update="logo\simple.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="skinsettings.json">
+    <None Update="SIDStream-settings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="skins\christmas.png">
