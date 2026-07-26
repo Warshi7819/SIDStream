@@ -5,7 +5,25 @@
       "image": "cog.png",
       "hover-image": "cog.png",
       "pressed-image": "cog.png",
-      "x-pos": 790,
+      "x-pos": 285,
+      "y-pos": 753,
+      "width": 48,
+      "height": 48
+    },
+    "previous": {
+      "image": "prev.png",
+      "hover-image": "prev.png",
+      "pressed-image": "prev.png",
+      "x-pos": 510,
+      "y-pos": 753,
+      "width": 48,
+      "height": 48
+    },
+    "next": {
+      "image": "next.png",
+      "hover-image": "next.png",
+      "pressed-image": "next.png",
+      "x-pos": 620,
       "y-pos": 753,
       "width": 48,
       "height": 48
@@ -14,7 +32,7 @@
       "image": "play.png",
       "hover-image": "play.png",
       "pressed-image": "play.png",
-      "x-pos": 670,
+      "x-pos": 565,
       "y-pos": 753,
       "width": 48,
       "height": 48
@@ -23,7 +41,7 @@
       "image": "stop.png",
       "hover-image": "stop.png",
       "pressed-image": "stop.png",
-      "x-pos": 610,
+      "x-pos": 680,
       "y-pos": 753,
       "width": 48,
       "height": 48
@@ -32,19 +50,10 @@
       "image": "playlist.png",
       "hover-image": "playlist.png",
       "pressed-image": "playlist.png",
-      "x-pos": 730,
+      "x-pos": 770,
       "y-pos": 753,
       "width": 48,
       "height": 48
-    },
-    "open": {
-      "image": "open.png",
-      "hover-image": "open.png",
-      "pressed-image": "open.png",
-      "x-pos": 510,
-      "y-pos": 740,
-      "width": 62,
-      "height": 62
     },
     "close": {
       "image": "close.png",
@@ -55,7 +64,7 @@
       "width": 32,
       "height": 32
     },
-    "previous": {
+    "previous-sub": {
       "image": "prev.png",
       "hover-image": "prev.png",
       "pressed-image": "prev.png",
@@ -64,7 +73,7 @@
       "width": 32,
       "height": 32
     },
-    "next": {
+    "next-sub": {
       "image": "next.png",
       "hover-image": "next.png",
       "pressed-image": "next.png",

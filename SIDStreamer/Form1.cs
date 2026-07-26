@@ -60,10 +60,12 @@ namespace SIDStreamer
                 { "settings", settingsButton_Click },
                 { "stop", stopButton_Click },
                 { "close", closeButton_Click },
-                { "previous", prevButton_Click},
-                { "next", nextButton_Click },
+                { "previous-sub", prevSubButton_Click},
+                { "next-sub", nextSubButton_Click },
                 { "playlist", playlistButton_Click},
-                { "open", openFileButton_Click}
+                { "open", openFileButton_Click},
+                { "next", nextButton_Click },
+                { "previous", prevButton_Click }
             };
 
             _trackBarHandlers = new Dictionary<string, EventHandler>(StringComparer.OrdinalIgnoreCase)
@@ -567,6 +569,23 @@ namespace SIDStreamer
                 player.Start(tune);
                 updateCurrentSong();
             }
+            else if (playlistForm != null && !playlistForm.IsDisposed)
+            {
+                var playlist = playlistForm.CurrentPlaylist;
+                if (playlist.Count > 0)
+                {
+                    playlist.CurrentIndex = 0;
+                    var entry = playlist.CurrentTrack;
+                    if (entry != null)
+                    {
+                        this.pathToTune = entry.FilePath;
+                        _labels["media"].Text = entry.Title;
+                        this.loadTune();
+                        player.Start(tune);
+                        updateCurrentSong();
+                    }
+                }
+            }
         }
 
         // <summary>
@@ -633,10 +652,45 @@ namespace SIDStreamer
             this.Close();
         }
 
+        private void prevButton_Click(object? sender, EventArgs e)
+        {
+            if (playlistForm == null || playlistForm.IsDisposed) return;
+            var playlist = playlistForm.CurrentPlaylist;
+            if (playlist.Count == 0 || playlist.CurrentIndex <= 0) return;
+
+            playlist.CurrentIndex--;
+            var entry = playlist.CurrentTrack;
+            if (entry == null) return;
+
+            this.pathToTune = entry.FilePath;
+            _labels["media"].Text = entry.Title;
+            this.loadTune();
+            player.Start(tune);
+            updateCurrentSong();
+        }
+
+        private void nextButton_Click(object? sender, EventArgs e)
+        {
+            if (playlistForm == null || playlistForm.IsDisposed) return;
+            var playlist = playlistForm.CurrentPlaylist;
+            if (playlist.Count == 0 || playlist.CurrentIndex >= playlist.Count - 1) return;
+
+            playlist.CurrentIndex++;
+            var entry = playlist.CurrentTrack;
+            if (entry == null) return;
+
+            this.pathToTune = entry.FilePath;
+            _labels["media"].Text = entry.Title;
+            this.loadTune();
+            player.Start(tune);
+            updateCurrentSong();
+        }
+
+
         // <summary>
         // Previous button click event handler
         // </summary>
-        private void prevButton_Click(object? sender, EventArgs e)
+        private void prevSubButton_Click(object? sender, EventArgs e)
         {
             if (this.tune != null)
             {
@@ -665,7 +719,7 @@ namespace SIDStreamer
         // <summary>
         // Next button click event handler
         // </summary>
-        private void nextButton_Click(object? sender, EventArgs e)
+        private void nextSubButton_Click(object? sender, EventArgs e)
         {
             if (this.tune != null)
             {

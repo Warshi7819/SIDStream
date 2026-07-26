@@ -46,7 +46,7 @@
       "width": 62,
       "height": 62
     },
-    "previous": {
+    "previous-sub": {
       "image": "prev.png",
       "hover-image": "prev.png",
       "pressed-image": "prev.png",
@@ -55,7 +55,7 @@
       "width": 32,
       "height": 32
     },
-    "next": {
+    "next-sub": {
       "image": "next.png",
       "hover-image": "next.png",
       "pressed-image": "next.png",
