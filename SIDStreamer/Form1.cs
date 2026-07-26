@@ -224,8 +224,9 @@ namespace SIDStreamer
             const float refDpi = 192f;
 
             // Current resolution
-            float curW = Screen.PrimaryScreen.Bounds.Width;
-            float curH = Screen.PrimaryScreen.Bounds.Height;
+            var screen = Screen.PrimaryScreen;
+            float curW = screen?.Bounds.Width ?? refW;
+            float curH = screen?.Bounds.Height ?? refH;
 
             // Axis scale factors relative to the reference
             float scaleX = curW / refW;
@@ -408,6 +409,7 @@ namespace SIDStreamer
         private void setCurrentSettings()
         {
             SIDStreamSettings? settings = loadSkinSettings(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SIDStream-settings.json"));
+            if (settings == null) { return; }
             this.currentSkin = settings.skinName;
             this.currentHvscPath = settings.hvscPath;
         }
@@ -595,6 +597,9 @@ namespace SIDStreamer
         {
             SettingsForm settingsForm = new SettingsForm();
             var result = settingsForm.ShowDialog();
+            var skinChanged = false;
+
+
 
             if (result == DialogResult.OK)
             {
@@ -605,30 +610,29 @@ namespace SIDStreamer
                     return;
                 }
 
-                // Write to SIDStream-settings.json so that new skin is loaded next time  
+                if (this.currentSkin != settingsForm.newlySelectedSkin)
+                { 
+                    skinChanged = true;
+                }
+
+                this.currentSkin = settingsForm.newlySelectedSkin;
+                this.currentHvscPath = settingsForm.newlySelectedHvscPath;
+
+                // Write new settings as something has changed  
                 SIDStreamSettings settings = new SIDStreamSettings
                 {
                     skinName = this.currentSkin,
-                    hvscPath = settingsForm.newlySelectedHvscPath
+                    hvscPath = this.currentHvscPath
                 };
                 string jsonString = JsonSerializer.Serialize(settings, new JsonSerializerOptions { WriteIndented = true });
                 File.WriteAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SIDStream-settings.json"), jsonString);
 
-
-
-
-                if (this.currentSkin != settingsForm.newlySelectedSkin)
+                if (skinChanged)
                 {
                     // terminate playback
                     this.player.stop();
-                    // restart app, which should re-read settings from file
+                    // restart app
                     Application.Restart();
-                }
-                else 
-                {
-                    // set new settings as currentHvscPath has changed. 
-                    this.currentSkin = settingsForm.newlySelectedSkin;
-                    this.currentHvscPath = settingsForm.newlySelectedHvscPath;
                 }
             }
             settingsForm.Dispose();
@@ -760,8 +764,7 @@ namespace SIDStreamer
 
         private void Playlist_TrackSelected(object? sender, int index)
         {
-            var entry = playlistForm.CurrentPlaylist.CurrentTrack;
-            if (entry == null) return;
+            if (playlistForm?.CurrentPlaylist?.CurrentTrack is not { } entry) { return; }
 
             this.pathToTune = entry.FilePath;
             _labels["media"].Text = entry.Title;
