@@ -199,7 +199,8 @@ namespace SIDStreamer
             _suppressAfterCheck = true;
             try
             {
-                SetChildChecks(e.Node, e.Node.Checked);
+                if (e.Node is not { } node) { return; }
+            SetChildChecks(node, node.Checked);
             }
             finally
             {

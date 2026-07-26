@@ -1,7 +1,6 @@
 ﻿using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
-using System.Runtime.Intrinsics.Arm;
 using System.Text.Json;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
@@ -218,8 +217,9 @@ namespace SIDStream
             const float refDpi = 192f;
 
             // Current resolution
-            float curW = Screen.PrimaryScreen.Bounds.Width;
-            float curH = Screen.PrimaryScreen.Bounds.Height;
+            var screen = Screen.PrimaryScreen;
+            float curW = screen?.Bounds.Width ?? refW;
+            float curH = screen?.Bounds.Height ?? refH;
 
             // Axis scale factors relative to the reference
             float scaleX = curW / refW;
@@ -414,6 +414,7 @@ namespace SIDStream
         private void setCurrentSettings()
         {
             SIDStreamSettings? settings = loadSkinSettings(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SIDStream-settings.json"));
+            if (settings == null) { return; }
             this.currentSkin = settings.skinName;
             this.currentHvscPath = settings.hvscPath;
         }
@@ -518,7 +519,7 @@ namespace SIDStream
                 // Show the form now that shape/background is applied
                 Opacity = 1;
             }
-            catch (Exception ex) 
+            catch 
             {
                 // swallow — don't block startup if shaping fails
                 Opacity = 1;
