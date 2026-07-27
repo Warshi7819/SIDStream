@@ -1,4 +1,5 @@
 {
   "skinName": "SteamPunk",
-  "hvscPath": ""
+  "hvscPath": "",
+  "autoAdvanceMode": "next-track"
 }

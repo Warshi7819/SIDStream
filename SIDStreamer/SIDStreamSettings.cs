@@ -5,5 +5,6 @@
     {
         public string skinName { get; set; } = string.Empty;
         public string hvscPath { get; set; } = string.Empty;
+        public string autoAdvanceMode { get; set; } = "next-track";
     }
 }

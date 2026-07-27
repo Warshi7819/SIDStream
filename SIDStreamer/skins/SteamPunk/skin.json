@@ -111,6 +111,13 @@
       "fg-color": "#FFFFFF",
       "x-pos": 270,
       "y-pos": 350
+    },
+    "timePlayed": {
+      "text": "00:00 / 00:00",
+      "bg-color": "transparent",
+      "fg-color": "#B0B0B0",
+      "x-pos": 240,
+      "y-pos": 310
     }
   },
   "comboBoxes": {

@@ -10,7 +10,14 @@ namespace SIDStreamer.Playlists
 
         public int PrimaryLengthSeconds => ParseLengthToSeconds(PrimaryLength);
 
-        private static int ParseLengthToSeconds(string length)
+        public int GetLengthSeconds(int songIndex)
+        {
+            if (songIndex < 0 || songIndex >= Lengths.Count)
+                return -1;
+            return ParseLengthToSeconds(Lengths[songIndex]);
+        }
+
+        internal static int ParseLengthToSeconds(string length)
         {
             if (string.IsNullOrEmpty(length))
                 return -1;

@@ -1,9 +1,12 @@
 ﻿using sidplay;
 using SIDStream;
 using SIDStreamer.Controls;
+using SIDStreamer.Playlists;
+using System.Diagnostics;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography;
 using System.Text.Json;
 namespace SIDStreamer
 {
@@ -39,7 +42,12 @@ namespace SIDStreamer
 
         private string currentSkin = "SteamPunk";
         private string currentHvscPath = "";
-       
+        private string _autoAdvanceMode = "next-track";
+
+        private Stopwatch _playStopwatch = new();
+        private System.Windows.Forms.Timer _uiTimer = null!;
+        private SongLengthDatabase? _songLengths;
+        private int _currentTrackLengthSeconds = -1;
 
         Dictionary<string, EventHandler> _buttonHandlers;
         Dictionary<string, EventHandler> _trackBarHandlers;
@@ -96,9 +104,6 @@ namespace SIDStreamer
 
             player = new MonoSidPlayer(true);
             player.setVolume(0.5f);
-
-            // If HVSC (High Voltage Sid Collection) is set, then load song length database.
-            
         }
 
         /// <summary>
@@ -412,6 +417,7 @@ namespace SIDStreamer
             if (settings == null) { return; }
             this.currentSkin = settings.skinName;
             this.currentHvscPath = settings.hvscPath;
+            this._autoAdvanceMode = settings.autoAdvanceMode ?? "next-track";
         }
 
         // <summary>
@@ -422,7 +428,13 @@ namespace SIDStreamer
             try
             {
 
-                setCurrentSettings(); 
+                setCurrentSettings();
+
+                _uiTimer = new System.Windows.Forms.Timer { Interval = 200 };
+                _uiTimer.Tick += UpdateTimePlayedLabel;
+
+                if (!string.IsNullOrEmpty(currentHvscPath))
+                    _songLengths = new SongLengthDatabase(currentHvscPath);
 
                 string baseDir = AppDomain.CurrentDomain.BaseDirectory;
                 string skinDir = Path.Combine(baseDir, "skins", this.currentSkin);
@@ -525,6 +537,7 @@ namespace SIDStreamer
                 if (this.tune != null)
                 {
                     this.player.stop();
+                    StopPlaybackTimer();
                     this.tune = null;
                 }
 
@@ -568,7 +581,9 @@ namespace SIDStreamer
             if (this.tune != null)
             {
                 player.stop();
+                StopPlaybackTimer();
                 player.Start(tune);
+                StartPlaybackTimer();
                 updateCurrentSong();
             }
             else if (playlistForm != null && !playlistForm.IsDisposed)
@@ -584,6 +599,7 @@ namespace SIDStreamer
                         _labels["media"].Text = entry.Title;
                         this.loadTune();
                         player.Start(tune);
+                        StartPlaybackTimer();
                         updateCurrentSong();
                     }
                 }
@@ -618,11 +634,21 @@ namespace SIDStreamer
                 this.currentSkin = settingsForm.newlySelectedSkin;
                 this.currentHvscPath = settingsForm.newlySelectedHvscPath;
 
+                _songLengths = !string.IsNullOrEmpty(currentHvscPath) ? new SongLengthDatabase(currentHvscPath) : null;
+
+                if (playlistForm != null)
+                {
+                    if (!playlistForm.IsDisposed)
+                        playlistForm.Dispose();
+                    playlistForm = null;
+                }
+
                 // Write new settings as something has changed  
                 SIDStreamSettings settings = new SIDStreamSettings
                 {
                     skinName = this.currentSkin,
-                    hvscPath = this.currentHvscPath
+                    hvscPath = this.currentHvscPath,
+                    autoAdvanceMode = this._autoAdvanceMode
                 };
                 string jsonString = JsonSerializer.Serialize(settings, new JsonSerializerOptions { WriteIndented = true });
                 File.WriteAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SIDStream-settings.json"), jsonString);
@@ -644,6 +670,7 @@ namespace SIDStreamer
         private void stopButton_Click(object? sender, EventArgs e)
         {
             player.stop();
+            StopPlaybackTimer();
             this.updateCurrentSong();
         }
 
@@ -653,6 +680,7 @@ namespace SIDStreamer
         private void closeButton_Click(object? sender, EventArgs e)
         {
             player.stop();
+            StopPlaybackTimer();
             this.Close();
         }
 
@@ -670,26 +698,54 @@ namespace SIDStreamer
             _labels["media"].Text = entry.Title;
             this.loadTune();
             player.Start(tune);
+            StartPlaybackTimer();
             updateCurrentSong();
         }
 
         private void nextButton_Click(object? sender, EventArgs e)
         {
-            if (playlistForm == null || playlistForm.IsDisposed) return;
+            PlayNextTrack();
+        }
+
+        private bool PlayNextTrack()
+        {
+            if (playlistForm == null || playlistForm.IsDisposed) return false;
             var playlist = playlistForm.CurrentPlaylist;
-            if (playlist.Count == 0 || playlist.CurrentIndex >= playlist.Count - 1) return;
+            if (playlist.Count == 0 || playlist.CurrentIndex >= playlist.Count - 1) return false;
 
             playlist.CurrentIndex++;
             var entry = playlist.CurrentTrack;
-            if (entry == null) return;
+            if (entry == null) return false;
 
             this.pathToTune = entry.FilePath;
             _labels["media"].Text = entry.Title;
             this.loadTune();
             player.Start(tune);
+            StartPlaybackTimer();
             updateCurrentSong();
+            return true;
         }
 
+        private bool PlayNextSubtrack()
+        {
+            if (this.tune == null) return false;
+            if (this.tune.Info.currentSong >= this.tune.Info.songs) return false;
+
+            switch (this.player.State)
+            {
+                case SID2Types.sid2_player_t.sid2_playing:
+                case SID2Types.sid2_player_t.sid2_paused:
+                    player.stop();
+                    StopPlaybackTimer();
+                    break;
+            }
+
+            tune.Info.currentSong++;
+            player.Start(tune, tune.Info.currentSong);
+            StartPlaybackTimer();
+            this.updateCurrentSong();
+            return true;
+        }
 
         // <summary>
         // Previous button click event handler
@@ -706,12 +762,14 @@ namespace SIDStreamer
                         case SID2Types.sid2_player_t.sid2_playing:
                         case SID2Types.sid2_player_t.sid2_paused:
                             player.stop();
+                            StopPlaybackTimer();
                             break;
                     }
 
                     tune.Info.currentSong--;
 
                     player.Start(tune, tune.Info.currentSong);
+                    StartPlaybackTimer();
 
                     this.updateCurrentSong();
 
@@ -735,6 +793,7 @@ namespace SIDStreamer
                         case SID2Types.sid2_player_t.sid2_playing:
                         case SID2Types.sid2_player_t.sid2_paused:
                             player.stop();
+                            StopPlaybackTimer();
                             break;
                     }
 
@@ -742,6 +801,7 @@ namespace SIDStreamer
 
 
                     player.Start(tune, tune.Info.currentSong);
+                    StartPlaybackTimer();
                     this.updateCurrentSong();
                 }
             }
@@ -770,10 +830,89 @@ namespace SIDStreamer
             _labels["media"].Text = entry.Title;
             this.loadTune();
             player.Start(tune);
+            StartPlaybackTimer();
             updateCurrentSong();
         }
 
 
+
+        private void StartPlaybackTimer()
+        {
+            _currentTrackLengthSeconds = GetCurrentTrackLengthSeconds();
+            _playStopwatch.Restart();
+            if (!_uiTimer.Enabled)
+                _uiTimer.Start();
+        }
+
+        private void StopPlaybackTimer()
+        {
+            _playStopwatch.Reset();
+            _uiTimer.Stop();
+            if (_labels.TryGetValue("timePlayed", out var label))
+                label.Text = "00:00 / 00:00";
+        }
+
+        private int GetCurrentTrackLengthSeconds()
+        {
+            if (string.IsNullOrEmpty(pathToTune) || _songLengths == null)
+                return -1;
+
+            var entry = _songLengths.LookupByPath(pathToTune);
+            if (entry == null && File.Exists(pathToTune))
+            {
+                var hashBytes = MD5.HashData(File.ReadAllBytes(pathToTune));
+                var hashString = Convert.ToHexString(hashBytes).ToLowerInvariant();
+                entry = _songLengths.LookupByMd5(hashString);
+            }
+
+            if (entry == null || entry.Lengths.Count == 0)
+                return -1;
+
+            int songIndex = (tune?.Info.currentSong ?? 1) - 1;
+            if (songIndex < 0) songIndex = 0;
+            if (songIndex >= entry.Lengths.Count) songIndex = 0;
+
+            return entry.GetLengthSeconds(songIndex);
+        }
+
+        private void UpdateTimePlayedLabel(object? sender, EventArgs e)
+        {
+            if (!_labels.TryGetValue("timePlayed", out var label))
+                return;
+
+            if (player.State != SID2Types.sid2_player_t.sid2_playing)
+                return;
+
+            var elapsed = _playStopwatch.Elapsed;
+            string elapsedStr = $"{(int)elapsed.TotalMinutes:D2}:{elapsed.Seconds:D2}";
+
+            string durationStr;
+            if (_currentTrackLengthSeconds >= 0)
+            {
+                durationStr = $"{_currentTrackLengthSeconds / 60:D2}:{_currentTrackLengthSeconds % 60:D2}";
+            }
+            else
+            {
+                durationStr = "\u221E";
+            }
+
+            label.Text = $"{elapsedStr} / {durationStr}";
+
+            if (_currentTrackLengthSeconds >= 0 && elapsed.TotalSeconds >= _currentTrackLengthSeconds)
+            {
+                _uiTimer.Stop();
+                bool advanced = false;
+                if (_autoAdvanceMode == "next-subtrack")
+                    advanced = PlayNextSubtrack();
+                if (!advanced)
+                    advanced = PlayNextTrack();
+                if (!advanced)
+                {
+                    player.stop();
+                    StopPlaybackTimer();
+                }
+            }
+        }
 
         // <summary>
         // Update the current song of SID file label
@@ -828,6 +967,7 @@ namespace SIDStreamer
                 _labels["media"].Text = Path.GetFileName(filePath);
                 this.loadTune();
                 player.Start(tune);
+                StartPlaybackTimer();
             }
             else
             {
